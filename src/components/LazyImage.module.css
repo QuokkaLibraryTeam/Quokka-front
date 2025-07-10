@@ -1,0 +1,47 @@
+/* LazyImage.module.css */
+
+.imageContainer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 0.75rem; /* 12px */
+    overflow: hidden; /* 이미지가 컨테이너 밖으로 나가지 않도록 함 */
+  }
+  
+  .skeleton {
+    width: 100%;
+    height: 100%;
+    background-color: #e0e0e0; /* 밝은 회색 */
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  
+  /* 스켈레톤 UI에 부드러운 반짝임 효과 추가 */
+  @keyframes pulse {
+    0% {
+      background-color: #e0e0e0;
+    }
+    50% {
+      background-color: #d0d0d0;
+    }
+    100% {
+      background-color: #e0e0e0;
+    }
+  }
+  
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 이미지가 나타날 때 부드러운 효과 */
+    animation: fadeIn 0.5s;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  

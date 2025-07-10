@@ -1,0 +1,76 @@
+/* Main.module.css */
+
+.mainContainer {
+  padding: 1rem;
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.gridContainer {
+  display: grid;
+  /* 2개의 컬럼을 동일한 너비로 설정합니다. */
+  grid-template-columns: repeat(2, 1fr);
+  /* 행과 열의 간격을 설정합니다. */
+  gap: 1.5rem;
+  max-width: 500px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  /* 카드 내부의 아이템들을 중앙에 정렬합니다. */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  padding: 0.5rem;
+}
+
+.button {
+  background-color: var(--latte);
+  color: var(--dark-roast);
+  font-weight: 700;
+  border: none;
+  border-radius: 0.75rem; /* 12px */
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  
+  /* --- 수정된 부분 --- */
+  /* 너비를 이미지와 동일하게 150px로 설정합니다. */
+  width: 150px; 
+  /* padding과 border가 너비에 포함되도록 설정합니다. */
+  box-sizing: border-box; 
+  text-align: center;
+}
+
+.button:hover {
+  background-color: var(--cream);
+}
+
+.questionIcon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 25px;
+  height: 25px;
+  background-color: #ECC7C7;
+  border: 3px solid var(--mocha);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--mocha);
+  font-size: 1.1rem;
+}

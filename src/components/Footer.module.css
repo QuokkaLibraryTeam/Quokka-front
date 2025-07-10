@@ -1,0 +1,32 @@
+/* Footer.module.css */
+
+.footer {
+    position: fixed;
+    bottom: 1rem; /* 16px */
+    left: 1rem;  /* 16px */
+    z-index: 10;
+  }
+  
+  .settingsButton {
+    background-color: transparent;
+    border: none;
+    padding: 0.5rem; /* 8px */
+    cursor: pointer;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out, background-color 0.2s;
+  }
+  
+  .settingsButton:hover {
+    transform: rotate(45deg);
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .icon {
+    width: 2rem; /* 32px */
+    height: 2rem; /* 32px */
+    color: var(--mocha); /* index.css에 정의된 변수 사용 */
+  }
+  

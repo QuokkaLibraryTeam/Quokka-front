@@ -1,0 +1,47 @@
+/* Modal.module.css */
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background-color: var(--milk-foam);
+    padding: 2rem;
+    border-radius: 0.75rem; /* 12px */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    color: var(--dark-roast);
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 0.75rem; /* 12px */
+    right: 0.75rem; /* 12px */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 9999px;
+  }
+  
+  .closeButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .icon {
+    width: 1.5rem; /* 24px */
+    height: 1.5rem; /* 24px */
+    color: var(--mocha);
+  }
+  
