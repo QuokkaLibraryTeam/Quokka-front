@@ -1,0 +1,62 @@
+.authContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 1rem;
+    background-color: var(--milk); /* index.css의 배경색 변수 사용 */
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* 24px */
+    text-align: center;
+}
+
+.title {
+    font-size: 2.5rem; /* 40px */
+    font-weight: 700;
+    color: var(--coffee-bean);
+}
+
+.subtitle {
+    font-size: 1rem; /* 16px */
+    color: var(--mocha);
+    margin-top: -1.25rem; /* 제목과의 간격 조정 */
+}
+
+.googleButton {
+  /* Main 페이지의 버튼 스타일과 동일하게 적용 */
+  background-color: var(--caramel);
+  color: var(--dark-roast);
+  font-weight: 700;
+  border: 2px solid var(--coffee-bean);
+  border-radius: 0.25rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 3px 3px 0px var(--coffee-bean);
+  
+  /* 아이콘과 텍스트를 함께 보여주기 위한 flex 설정 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem; /* 12px */
+
+  /* 너비는 컨텐츠에 맞게 조절 */
+  width: auto;
+  min-width: 220px; /* 최소 너비 지정 */
+}
+
+.googleButton:hover {
+  background-color: var(--cream);
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px var(--coffee-bean);
+}
+
+.googleIcon {
+    width: 24px;
+    height: 24px;
+}
