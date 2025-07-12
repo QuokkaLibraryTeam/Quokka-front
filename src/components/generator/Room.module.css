@@ -1,0 +1,215 @@
+/* Room.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    background: url('../../assets/images/quokka_bg.png') no-repeat center center; /* 쿼카 배경 이미지 */
+    background-size: contain;
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+    background-color: rgba(243, 224, 192, 0.8); /* 반투명 배경 */
+    border-radius: 20px;
+}
+
+.button {
+    background-color: var(--caramel);
+    color: var(--dark-roast);
+    font-weight: 700;
+    border: 2px solid var(--coffee-bean);
+    border-radius: 30px;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 3px 3px 0px var(--coffee-bean);
+    white-space: nowrap;
+}
+
+.button:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px var(--coffee-bean);
+}
+
+.hostingBox {
+    width: 100%;
+    max-width: 400px;
+    height: 70%;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 2rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    border: 2px solid var(--cappuccino);
+}
+
+.codeSection {
+    text-align: center;
+    width: 100%;
+}
+
+.label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--espresso);
+}
+
+.codeDisplay {
+    background-color: var(--milk-foam);
+    border: 2px solid var(--cappuccino);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--dark-roast);
+    margin-top: 0.5rem;
+    position: relative;
+    letter-spacing: 2px;
+    cursor: pointer; 
+}
+
+.topicForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.topicInput {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1.1rem;
+    border: 2px solid var(--cappuccino);
+    border-radius: 10px;
+    background-color: var(--milk-foam);
+    color: var(--dark-roast);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.topicInput::placeholder {
+    color: var(--mocha);
+}
+
+.topicInput:focus {
+    outline: none;
+    border-color: var(--latte);
+}
+
+.joiningBox {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background-color: rgba(243, 224, 192, 0.8);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.joinForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.codeInput {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: center;
+    border: 2px solid var(--cappuccino);
+    border-radius: 10px;
+    background-color: var(--milk-foam);
+    color: var(--dark-roast);
+    box-sizing: border-box;
+}
+
+.codeInput::placeholder {
+    color: var(--mocha);
+    font-size: 1rem;
+    letter-spacing: normal;
+}
+
+.codeInput:focus {
+    outline: none;
+    border-color: var(--latte);
+}
+
+.participantSection {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 700;
+    color: var(--espresso);
+    border: 2px solid var(--cappuccino);
+}
+
+.keyboardPlaceholder {
+    color: var(--mocha);
+    font-weight: 600;
+}
+
+.waitingMessage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--espresso);
+    text-align: center;
+}
+
+.notificationContainer {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.notification {
+    padding: 0.8rem 1.5rem;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    animation: fadeInOut 3s ease-in-out forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+
+.copyCheckmark {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #28a745;
+}

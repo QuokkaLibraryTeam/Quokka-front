@@ -1,0 +1,97 @@
+/* Chat.module.css */
+.statusMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.2rem;
+    color: var(--mocha);
+  }
+  
+  .chatPage {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  
+  .questionBubble {
+    background-color: var(--latte);
+    color: var(--dark-roast);
+    padding: 1rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 1rem auto;
+    max-width: 80%;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .contentArea {
+    flex-grow: 1;
+    /* 동화 이미지가 보일 공간 */
+  }
+  
+  .inputArea {
+    flex-shrink: 0;
+  }
+  
+  .textInputBox {
+    display: flex;
+    width: 100%;
+    background-color: var(--cappuccino);
+    border-radius: 25px;
+    padding: 0.5rem;
+    margin-top: 1rem;
+  }
+  .textInputBox input {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 0 1rem;
+    font-size: 1rem;
+    color: var(--dark-roast);
+  }
+  .textInputBox button {
+    background-color: var(--mocha);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  
+  .exampleGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .choiceButton {
+    background-color: var(--cappuccino);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark-roast);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .choiceButton:hover {
+    background-color: var(--macchiato);
+  }
+  
+  .directInputButton {
+    grid-column: 2 / 3; /* 두 번째 열에 위치 */
+    grid-row: 1 / 3; /* 1~2 행을 차지 */
+    height: auto; /* 높이를 자동으로 조절 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

@@ -1,0 +1,43 @@
+/* Room.module.css 파일 하단에 추가 */
+
+.participantSection {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 700;
+    color: var(--espresso);
+    border: 2px solid var(--cappuccino);
+}
+
+.keyboardPlaceholder {
+    color: var(--mocha);
+    font-weight: 600;
+}
+
+.notificationContainer {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.notification {
+    padding: 0.8rem 1.5rem;
+    background-color: rgba(40, 22, 15, 0.85);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    animation: fadeInOut 3s ease-in-out forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-20px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}

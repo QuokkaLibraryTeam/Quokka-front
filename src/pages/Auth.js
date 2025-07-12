@@ -13,12 +13,30 @@ const GoogleIcon = ({ className }) => (
 
 
 const Auth = () => {
+    // Google 로그인 버튼 클릭 시 실행될 함수
+    const handleGoogleLogin = async () => {
+        try {
+            // 1. 백엔드에 로그인 요청을 보내 Google 인증 URL을 받습니다.
+            const response = await fetch('/api/v1/auth/login');
+            if (!response.ok) {
+                throw new Error('로그인 URL을 받아오는데 실패했습니다.');
+            }
+            const data = await response.json();
+            
+            // 2. 받은 URL로 사용자를 리디렉션하여 Google 인증을 시작합니다.
+            window.location.href = data.auth_url;
+        } catch (error) {
+            console.error("Google 로그인 중 에러 발생:", error);
+            alert('로그인 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        }
+    };
+
     return (
         <div className={styles.authContainer}>
             <div className={styles.contentWrapper}>
                 <h1 className={styles.title}>쿼카의 서재</h1>
-                <p className={styles.subtitle}>책과 함께 성장하는 나만의 공간</p>
-                <button className={styles.googleButton}>
+                <p className={styles.subtitle}>쿼카와 함께 동화를 만들어요.</p>
+                <button className={styles.googleButton} onClick={handleGoogleLogin}>
                     <GoogleIcon className={styles.googleIcon} />
                     <span>Google로 로그인</span>
                 </button>
