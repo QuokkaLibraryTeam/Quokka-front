@@ -1,0 +1,100 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.tagButton {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    color: #555;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.tagButton:hover {
+    background-color: #e0e0e0;
+}
+
+.tagButton.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.storyGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.storyItem {
+    background-color: #ffffff;
+    border: 1px solid #e0d9cf;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.storyItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.storyImage {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+}
+
+.storyInfo {
+    padding: 12px;
+}
+
+.storyTitle {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.storyTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.storyTag {
+    font-size: 12px;
+    color: #007bff;
+}
+
+.loading, .error {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    padding: 40px;
+}
