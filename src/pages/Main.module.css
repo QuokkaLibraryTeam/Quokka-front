@@ -288,7 +288,35 @@
   background-color: var(--latte);
 }
 
-/* --- ⭐️ TTS 설정 모달 스타일 추가 --- */
+/* --- 함께 만들기 모달 스타일 --- */
+.modalActionsVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* ⭐️ 버튼 사이 간격 증가 */
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.modalActionsVertical .modalButton {
+    width: 100%;
+    padding: 1rem; /* 버튼 크기 키움 */
+    font-size: 1.1rem;
+}
+
+.cancelButton {
+    background-color: transparent;
+    border-color: var(--mocha);
+    color: var(--mocha);
+}
+
+.cancelButton:hover {
+    background-color: var(--macchiato);
+    color: var(--dark-roast);
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0px var(--coffee-bean);
+}
+
+/* --- TTS 설정 모달 스타일 --- */
 .settingsGroup {
   display: flex;
   flex-direction: column;
@@ -304,7 +332,6 @@
   color: var(--mocha);
 }
 
-/* 애플 스타일 세그먼트 버튼 */
 .segmentedControl {
   display: flex;
   background-color: var(--cappuccino);
@@ -332,14 +359,15 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* 애플 스타일 슬라이더 */
+/* ⭐️ 슬라이더 컨테이너 스타일 수정 */
 .sliderContainer {
   display: flex;
   align-items: center;
   gap: 1rem;
   width: 100%;
-  color: var(--mocha);
-  font-size: 0.9rem;
+  color: var(--espresso); /* 색상 진하게 변경 */
+  font-size: 1rem; /* 폰트 크기 키움 */
+  font-weight: 600; /* 폰트 굵게 */
 }
 
 .slider {

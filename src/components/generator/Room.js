@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Room.module.css';
 
 const CheckIcon = ({ className }) => (
@@ -10,7 +10,8 @@ const CheckIcon = ({ className }) => (
 
 const Room = () => {
     const navigate = useNavigate();
-    const [view, setView] = useState('initial');
+    const location = useLocation();
+    const [view, setView] = useState('initializing'); // 초기 상태
     const [roomCode, setRoomCode] = useState('');
     const [topic, setTopic] = useState('');
     const [notifications, setNotifications] = useState([]);
@@ -32,7 +33,7 @@ const Room = () => {
                 setParticipantCount(roomInfo.users.length);
             } else {
                 if (viewRef.current === 'guest_waiting') {
-                    navigate('/multiplayer', { replace: true });
+                    navigate('/');
                 }
             }
         } catch (error) {
@@ -60,20 +61,14 @@ const Room = () => {
             }
         };
         socketRef.current.onclose = () => {
-            console.log("대기방 웹소켓 연결 종료");
             if (viewRef.current === 'guest_waiting') {
-                const closeMessage = "방장이 방을 나갔습니다. 로비로 돌아갑니다.";
-                const newNotification = { id: Date.now(), text: closeMessage };
-                setNotifications(prev => [...prev, newNotification]);
-                setTimeout(() => {
-                    navigate('/multiplayer', { replace: true });
-                }, 3000);
+                alert("방장이 방을 나갔습니다. 메인 화면으로 돌아갑니다.");
+                navigate('/', { replace: true });
             }
         };
         socketRef.current.onerror = () => {
             alert("방에 연결할 수 없거나 존재하지 않는 방입니다.");
-            setView('initial');
-            setRoomCode('');
+            navigate('/', { replace: true });
         };
     };
 
@@ -92,6 +87,7 @@ const Room = () => {
             setTimeout(() => connectToSocket(data.room_code), 100);
         } catch (error) {
             alert(error.message);
+            navigate('/', { replace: true });
         }
     };
     
@@ -139,18 +135,29 @@ const Room = () => {
         navigator.clipboard.writeText(roomCode).then(() => {
             setShowCheckmark(true);
             setTimeout(() => setShowCheckmark(false), 2000);
-
             const newNotification = { id: Date.now(), text: '복사되었습니다' };
             setNotifications(prev => [...prev, newNotification]);
             setTimeout(() => {
                 setNotifications(prev => prev.filter(n => n.id !== newNotification.id));
             }, 2000);
         }).catch(err => {
-            console.error('클립보드 복사 실패:', err);
             alert('복사에 실패했습니다.');
         });
     };
     
+    // Main.js에서 받은 action에 따라 뷰를 설정
+    useEffect(() => {
+        const action = location.state?.action;
+        if (action === 'create') {
+            handleCreateRoom();
+        } else if (action === 'join') {
+            handleShowJoinView();
+        } else {
+            // 잘못된 접근 시 메인으로 이동
+            navigate('/', { replace: true });
+        }
+    }, []); // 컴포넌트 마운트 시 한 번만 실행
+
     useEffect(() => {
         return () => {
             if (viewRef.current === 'hosting' && roomCode) {
@@ -170,7 +177,7 @@ const Room = () => {
     const renderWaitingRoom = () => (
         <div className={styles.hostingBox}>
             <div className={styles.codeSection}>
-                <label className={styles.label}>코드를 눌러 주세요!</label>
+                <label className={styles.label}>코드를 눌러 복사하세요!</label>
                 <div className={styles.codeDisplay} onClick={handleCopyCode}>
                     {roomCode}
                     {showCheckmark && <CheckIcon className={styles.copyCheckmark} />}
@@ -199,25 +206,13 @@ const Room = () => {
             </div>
 
             <div className={styles.roomBox}>
-                {view === 'initial' && (
-                    <div className={styles.buttonGroup}>
-                        <button className={styles.button} onClick={handleCreateRoom}>방 만들기</button>
-                        <button className={styles.button} onClick={handleShowJoinView}>방 들어가기</button>
-                    </div>
-                )}
+                {view === 'initializing' && <div className={styles.waitingMessage}>준비 중...</div>}
                 {(view === 'hosting' || view === 'guest_waiting') && renderWaitingRoom()}
                 {view === 'joining' && (
                     <div className={styles.joiningBox}>
                         <form onSubmit={handleJoinSubmit} className={styles.joinForm}>
                             <label className={styles.label}>CODE를 입력해주세요!</label>
-                            <input
-                                type="text"
-                                className={styles.codeInput}
-                                value={roomCode}
-                                onChange={(e) => setRoomCode(e.target.value)}
-                                placeholder="코드를 입력하세요"
-                                autoFocus
-                            />
+                            <input type="text" className={styles.codeInput} value={roomCode} onChange={(e) => setRoomCode(e.target.value)} placeholder="코드를 입력하세요" autoFocus />
                             <button type="submit" className={styles.button}>들어가기</button>
                         </form>
                     </div>
