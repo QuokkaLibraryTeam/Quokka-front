@@ -7,9 +7,9 @@ const Chat = () => {
     const { storyId } = useParams();
     const navigate = useNavigate();
 
-    // 상태 관리
+    // --- 상태 관리 ---
     const [status, setStatus] = useState('initializing');
-    const [question, setQuestion] = useState('');
+    const [messageHistory, setMessageHistory] = useState([]); // 대화 기록을 저장할 상태
     const [examples, setExamples] = useState([]);
     const [illustrations, setIllustrations] = useState([]);
     const [draftData, setDraftData] = useState(null);
@@ -17,10 +17,17 @@ const Chat = () => {
     const [inputValue, setInputValue] = useState('');
     
     const socketRef = useRef(null);
-    const BACKEND_URL = 'http://localhost:8000'; // 백엔드 서버 주소
+    const historyEndRef = useRef(null); // 메시지 목록의 끝을 참조할 ref
+    const BACKEND_URL = 'http://localhost:8000';
 
+    // --- 효과 훅 ---
+
+    // 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
     useEffect(() => {
-        // 경합 상태(Race Condition) 방지를 위한 플래그
+        historyEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messageHistory]);
+    
+    useEffect(() => {
         let isCancelled = false;
 
         const setupChat = async () => {
@@ -31,7 +38,7 @@ const Chat = () => {
             }
 
             try {
-                // 1. GET: 동화 제목 가져오기
+                // (이전 코드와 동일: GET 동화 제목, POST 채팅 세션 초기화)
                 const storyResponse = await fetch(`/api/v1/users/me/stories/${storyId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -41,7 +48,6 @@ const Chat = () => {
                 const storyData = await storyResponse.json();
                 const storyTitle = storyData.title;
 
-                // 2. POST: 채팅 세션 초기화 및 session_key 획득
                 const initChatResponse = await fetch(`/api/v1/stories/${storyId}/chat`, {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -53,7 +59,7 @@ const Chat = () => {
                 const sessionKey = chatSessionData.session_key;
                 if (!sessionKey) throw new Error('세션 키를 받지 못했습니다.');
 
-                // 3. session_key로 웹소켓 연결
+                // 웹소켓 연결
                 setStatus('connecting');
                 const wsUrl = `ws://localhost:8000/api/v1/ws/story/${sessionKey}`;
                 socketRef.current = new WebSocket(wsUrl, ['jwt', token]);
@@ -61,81 +67,79 @@ const Chat = () => {
                 socketRef.current.onopen = () => {
                     if (isCancelled) return;
                     setStatus('open');
-                    const initialMessage = { type: 'scene', text: storyTitle };
-                    socketRef.current.send(JSON.stringify(initialMessage));
+                    socketRef.current.send(JSON.stringify({ type: 'scene', text: storyTitle }));
                 };
 
+                // 웹소켓 메시지 수신 처리
                 socketRef.current.onmessage = (event) => {
                     if (isCancelled) return;
                     const data = JSON.parse(event.data);
                     
                     if (data.type === 'question') {
-                        setDraftData(null);
-                        setIllustrations([]);
-                        setQuestion(data.text);
+                        // 질문을 받으면 대화 기록에 추가
+                        setMessageHistory(prev => [...prev, { sender: 'ai', text: data.text }]);
                         setExamples(data.examples || []);
+                        setIllustrations([]);
+                        setDraftData(null);
                         setShowTextInput(false);
                     } else if (data.type === 'illustration') {
-                        setDraftData(null);
-                        setQuestion('');
-                        setExamples([]);
                         setIllustrations(data.urls || []);
+                        setExamples([]);
+                        setDraftData(null);
                     } else if (data.type === 'draft') {
-                        setQuestion('');
+                        setDraftData(data);
                         setExamples([]);
                         setIllustrations([]);
-                        setDraftData(data);
                     }
                 };
 
-                socketRef.current.onclose = () => { if (isCancelled) return; setStatus('closed'); };
-                socketRef.current.onerror = (error) => { if (isCancelled) return; console.error('웹소켓 에러:', error); };
+                socketRef.current.onclose = () => { if (!isCancelled) setStatus('closed'); };
+                socketRef.current.onerror = (error) => { if (!isCancelled) console.error('웹소켓 에러:', error); };
 
             } catch (error) {
-                if (isCancelled) return;
-                console.error(error);
-                alert(error.message);
-                setStatus('closed');
+                if (!isCancelled) {
+                    console.error(error);
+                    alert(error.message);
+                    setStatus('closed');
+                }
             }
         };
 
         setupChat();
 
-        // Cleanup 함수
         return () => {
             isCancelled = true;
             if (socketRef.current) {
-                socketRef.current.onclose = null;
-                socketRef.current.onerror = null;
-                socketRef.current.onmessage = null;
-                socketRef.current.onopen = null;
                 socketRef.current.close();
             }
         };
     }, [storyId, navigate]);
 
-    // 답변 전송 핸들러
+    // --- 핸들러 함수 ---
+
     const handleAnswerSubmit = (text) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
+            // 사용자의 답변을 대화 기록에 추가
+            setMessageHistory(prev => [...prev, { sender: 'user', text }]);
             socketRef.current.send(JSON.stringify({ text }));
-            setQuestion('');
             setExamples([]);
+            setShowTextInput(false);
+            setInputValue('');
         }
     };
     
-    // 이미지 선택 핸들러
     const handleIllustrationChoice = (choiceIndex) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
+            // 이미지 선택은 시스템 메시지이므로 기록에 추가하지 않음
             socketRef.current.send(JSON.stringify({ type: 'scene', text: choiceIndex }));
             setIllustrations([]);
         }
     };
 
-    // draft 리뷰 결과 전송 핸들러
     const handleDraftReview = (decision) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify({ type: decision }));
-            setDraftData(null); // View 컴포넌트를 닫고 채팅 UI로 돌아감
+            setDraftData(null);
         }
     };
 
@@ -145,41 +149,10 @@ const Chat = () => {
         e.preventDefault();
         if (inputValue.trim()) {
             handleAnswerSubmit(inputValue);
-            setInputValue('');
-            setShowTextInput(false);
         }
     };
-
+    
     // --- UI 렌더링 로직 ---
-
-    const renderMainContent = () => {
-        if (illustrations.length > 0) {
-            return (
-                <div className={styles.illustrationContainer}>
-                    <h4>마음에 드는 삽화를 골라주세요</h4>
-                    <div className={styles.illustrationGrid}>
-                        {illustrations.map((url, index) => {
-                            const filename = url.split('/').pop();
-                            const imageUrl = `${BACKEND_URL}/illustrations/${filename}`;
-                            return (
-                                <img
-                                    key={index}
-                                    src={imageUrl}
-                                    alt={`동화 삽화 ${index + 1}`}
-                                    className={styles.illustrationImage}
-                                    onClick={() => handleIllustrationChoice(index)}
-                                />
-                            );
-                        })}
-                    </div>
-                </div>
-            );
-        }
-        if (question) {
-            return <div className={styles.questionBubble}>{question}</div>;
-        }
-        return null;
-    };
 
     const renderInputArea = () => {
         if (illustrations.length > 0) return null;
@@ -212,16 +185,45 @@ const Chat = () => {
         return <div className={styles.statusMessage}>연결이 끊어졌습니다. 페이지를 새로고침 해주세요.</div>;
     }
 
-    // draft 데이터가 있으면 View 컴포넌트를 렌더링
     if (draftData) {
         return <View draft={draftData} onReview={handleDraftReview} />;
     }
-
+    
     return (
         <div className={styles.chatPage}>
-            <div className={styles.contentArea}>
-                {renderMainContent()}
+            {/* 메시지 기록 영역 */}
+            <div className={styles.messageHistory}>
+                {messageHistory.map((msg, index) => (
+                    <div key={index} className={`${styles.bubble} ${msg.sender === 'ai' ? styles.aiBubble : styles.userBubble}`}>
+                        {msg.text}
+                    </div>
+                ))}
+                {/* 일러스트 선택 UI가 메시지 기록 중간에 표시될 수 있도록 위치 변경 */}
+                {illustrations.length > 0 && (
+                     <div className={styles.illustrationContainer}>
+                        <h4>마음에 드는 삽화를 골라주세요</h4>
+                        <div className={styles.illustrationGrid}>
+                            {illustrations.map((url, index) => {
+                                const filename = url.split('/').pop();
+                                const imageUrl = `${BACKEND_URL}/illustrations/${filename}`;
+                                return (
+                                    <img
+                                        key={index}
+                                        src={imageUrl}
+                                        alt={`동화 삽화 ${index + 1}`}
+                                        className={styles.illustrationImage}
+                                        onClick={() => handleIllustrationChoice(index)}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+                {/* 스크롤을 위한 빈 div */}
+                <div ref={historyEndRef} />
             </div>
+
+            {/* 하단 입력 영역 */}
             <div className={styles.inputArea}>
                 {renderInputArea()}
             </div>

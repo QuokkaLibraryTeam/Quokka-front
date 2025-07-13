@@ -1,4 +1,68 @@
 /* Chat.module.css */
+
+/*
+  채팅 페이지 전체를 감싸는 컨테이너입니다.
+  메시지 기록(chatContainer)과 입력 영역(inputArea)으로 나뉩니다.
+*/
+.chatPage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: var(--milk); /* 전체 배경색을 부드러운 우유 색으로 설정 */
+}
+
+/*
+  메시지 기록이 표시되는 영역입니다.
+  flex-grow: 1을 사용하여 남은 공간을 모두 차지하게 하고,
+  내용이 많아지면 스크롤이 생기도록 overflow-y: auto를 설정합니다.
+*/
+.messageHistory {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* 메시지 간의 간격 */
+}
+
+/* --- 메시지 버블 기본 스타일 --- */
+.bubble {
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  max-width: 75%;
+  line-height: 1.5;
+  font-size: 1.1rem;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
+}
+
+/*
+  AI가 보내는 메시지 (질문) 스타일입니다.
+  왼쪽에 배치되며, 라떼 색상 배경에 어두운 글씨를 사용합니다.
+*/
+.aiBubble {
+  align-self: flex-start; /* 왼쪽 정렬 */
+  background-color: var(--latte);
+  color: var(--dark-roast);
+  font-weight: 700;
+  border-bottom-left-radius: 4px; /* 말꼬리 느낌 */
+}
+
+/*
+  사용자가 보내는 메시지 (답변) 스타일입니다.
+  오른쪽에 배치되며, 모카 색상 배경에 흰 글씨를 사용해 대비를 줍니다.
+*/
+.userBubble {
+  align-self: flex-end; /* 오른쪽 정렬 */
+  background-color: var(--mocha);
+  color: white;
+  font-weight: 600;
+  border-bottom-right-radius: 4px; /* 말꼬리 느낌 */
+}
+
+
+/* --- 시스템 상태 메시지 --- */
 .statusMessage {
     display: flex;
     justify-content: center;
@@ -6,92 +70,122 @@
     height: 100%;
     font-size: 1.2rem;
     color: var(--mocha);
-  }
-  
-  .chatPage {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
-  
-  .questionBubble {
-    background-color: var(--latte);
-    color: var(--dark-roast);
-    padding: 1rem 1.5rem;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 1.2rem;
+}
+
+/* --- 일러스트 선택 영역 --- */
+.illustrationContainer {
     text-align: center;
-    margin: 1rem auto;
-    max-width: 80%;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-  }
-  
-  .contentArea {
-    flex-grow: 1;
-    /* 동화 이미지가 보일 공간 */
-  }
-  
-  .inputArea {
-    flex-shrink: 0;
-  }
-  
-  .textInputBox {
-    display: flex;
-    width: 100%;
-    background-color: var(--cappuccino);
-    border-radius: 25px;
-    padding: 0.5rem;
-    margin-top: 1rem;
-  }
-  .textInputBox input {
-    flex-grow: 1;
-    border: none;
-    background: transparent;
-    outline: none;
-    padding: 0 1rem;
-    font-size: 1rem;
-    color: var(--dark-roast);
-  }
-  .textInputBox button {
-    background-color: var(--mocha);
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-  }
-  
-  
-  .exampleGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  
-  .choiceButton {
-    background-color: var(--cappuccino);
-    border: 2px solid transparent;
-    border-radius: 20px;
     padding: 1rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    background-color: var(--milk-foam);
+    border-radius: 15px;
+    margin: 1rem 0;
+}
+
+.illustrationContainer h4 {
     color: var(--dark-roast);
+    margin-bottom: 1rem;
+}
+
+.illustrationGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.illustrationImage {
+    width: 100%;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .choiceButton:hover {
-    background-color: var(--macchiato);
-  }
-  
-  .directInputButton {
-    grid-column: 2 / 3; /* 두 번째 열에 위치 */
-    grid-row: 1 / 3; /* 1~2 행을 차지 */
-    height: auto; /* 높이를 자동으로 조절 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent;
+}
+
+.illustrationImage:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-color: var(--caramel);
+}
+
+
+/* --- 하단 입력 영역 --- */
+.inputArea {
+  flex-shrink: 0;
+  padding-top: 1rem;
+}
+
+/* 선택지 버튼 그리드 */
+.exampleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.choiceButton {
+  background-color: var(--cappuccino);
+  border: 2px solid transparent;
+  border-radius: 20px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--dark-roast);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.choiceButton:hover {
+  background-color: var(--macchiato);
+  transform: translateY(-2px);
+}
+
+/* '내가 쓸게!' 버튼 스타일 */
+.directInputButton {
+  grid-column: 1 / -1; /* 그리드의 전체 너비를 차지하도록 수정 */
+  background-color: var(--espresso);
+  color: white;
+}
+
+.directInputButton:hover {
+    background-color: var(--coffee-bean);
+}
+
+/* 직접 입력 폼 */
+.textInputBox {
+  display: flex;
+  width: 100%;
+  background-color: var(--milk-foam);
+  border: 2px solid var(--cappuccino);
+  border-radius: 30px;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.textInputBox input {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0 1rem;
+  font-size: 1rem;
+  color: var(--dark-roast);
+}
+
+.textInputBox input::placeholder {
+    color: var(--mocha);
+}
+
+.textInputBox button {
+  background-color: var(--latte);
+  color: var(--dark-roast);
+  font-weight: 700;
+  border: none;
+  border-radius: 20px;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.textInputBox button:hover {
+    background-color: var(--caramel);
+}

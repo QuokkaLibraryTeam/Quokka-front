@@ -1,170 +1,287 @@
 /* Main.module.css */
 
+/* --- 메인 컨테이너 --- */
 .mainContainer {
-  padding: 1rem;
-  padding-top: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-.gridContainer {
-  display: grid;
-  /* 2개의 컬럼을 동일한 너비로 설정합니다. */
-  grid-template-columns: repeat(2, 1fr);
-  /* 행과 열의 간격을 설정합니다. */
-  gap: 1.5rem;
-  max-width: 500px;
-  width: 100%;
-}
-
-.card {
   display: flex;
   flex-direction: column;
-  /* 카드 내부의 아이템들을 중앙에 정렬합니다. */
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-/* --- 수정된 이미지 래퍼 스타일 --- */
-.imageWrapper {
-  position: relative;
-  width: 180px;
-  height: 180px;
-  padding: 0.5rem;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  font-family: 'Gamja Flower', cursive;
+  background-color: var(--espresso);
+  background-image: 
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
+      linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
+  background-size: 200px 200px, cover;
   box-sizing: border-box;
-  
-  /* 버튼과 동일한 디자인 적용 */
-  background-color: var(--caramel);
-  border: 2px solid var(--coffee-bean);
-  border-radius: 0.25rem;
+}
+
+/* --- 책장 전체 틀 --- */
+.bookshelf {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--dark-roast); /* 깊이감을 위한 어두운 배경 */
+  border-radius: 10px;
+  padding: 35px 20px; /* 테두리 두께(15px) + 내부 여백(20px) */
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* 외부 그림자 */
+}
+
+/* ::before, ::after 가상 요소를 사용하여 입체적인 프레임을 생성 */
+.bookshelf::before, .bookshelf::after {
+  content: '';
+  position: absolute;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+/* 바깥쪽 그림자 및 하이라이트 레이어 */
+.bookshelf::before {
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* 안으로 파인 듯한 느낌을 주기 위해 그림자 방향을 반대로 적용 */
+  box-shadow: 
+      inset 8px 8px 15px -5px rgba(0,0,0,0.6),  /* 상단-좌측 내부 그림자 */
+      inset -8px -8px 15px -5px rgba(255,255,255,0.1); /* 하단-우측 내부 하이라이트 */
+}
+
+/* 안쪽 나무 질감 레이어 */
+.bookshelf::after {
+  top: 15px; left: 15px; right: 15px; bottom: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+
+/* --- 책장 한 칸 (가로) --- */
+.shelf {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  padding-bottom: 35px; 
+}
+
+.shelf::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0; 
+  right: 0;
+  height: 15px;
+  /* 조명 방향에 맞춰 그라데이션 수정 */
+  background: linear-gradient(
+    to bottom, 
+    var(--cappuccino) 0%,
+    var(--mocha) 40%,
+    var(--coffee-bean) 100%
+  );
+  box-shadow: 
+    0 2px 5px rgba(0, 0, 0, 0.4),
+    /* 상단 하이라이트 제거, 하단에 미세한 그림자 추가 */
+    inset 0 -1px 1px rgba(0,0,0,0.3);
+  border-radius: 2px;
+}
+
+
+.shelf:last-child {
+  border-bottom: none;
+  padding-bottom: 5px;
+}
+
+.shelf:last-child::after {
+  display: none;
+}
+
+
+/* --- 개별 책 스타일 --- */
+.book {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 200px;
+  border-radius: 4px 8px 8px 4px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 3px 3px 0px var(--coffee-bean);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  text-align: center;
+  padding: 15px;
+  box-sizing: border-box;
+  border: 1px solid var(--dark-roast);
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
 }
 
-.imageWrapper:hover {
-  transform: translate(3px, 3px);
-  box-shadow: 0px 0px 0px var(--coffee-bean);
+.book::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
 }
 
-/* --- 수정된 버튼 스타일 --- */
-.button {
-  background-color: var(--caramel); /* 나무 명패 같은 배경색 */
+.book::after {
+  content: '';
+  position: absolute;
+  right: 3px;
+  top: 5px;
+  width: 4px;
+  height: calc(100% - 10px);
+  background: repeating-linear-gradient( to bottom, rgba(255,255,255,0.2), rgba(255,255,255,0.2) 1px, transparent 1px, transparent 2px );
+}
+
+.book:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 8px 8px 15px rgba(0,0,0,0.4);
+}
+
+.bookImage {
+  background: linear-gradient(135deg, var(--caramel), var(--vanilla-light));
+  justify-content: space-around;
+}
+
+.bookButton {
+  background: linear-gradient(135deg, var(--latte), var(--cappuccino));
+}
+
+.book img {
+  max-height: 110px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
+}
+
+.bookTitle {
   color: var(--dark-roast);
   font-weight: 700;
-  border: 2px solid var(--coffee-bean); /* 짙은 갈색 테두리 */
-  border-radius: 0.25rem; /* 4px, 약간 각진 모서리 */
-  /* 버튼 크기를 키우기 위해 padding 수정 */
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 3px 3px 0px var(--coffee-bean); /* 입체감을 주는 그림자 */
-  white-space: nowrap;
-  /* 버튼 너비를 180px로 수정 */
-  width: 180px; 
-  box-sizing: border-box; 
-  text-align: center;
+  font-size: 1.4rem; /* 글씨 크기를 1.1rem에서 1.4rem으로 키웠습니다. */
+  line-height: 1.3;
+  word-break: keep-all;
+  margin-top: 5px;
+  text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
 }
 
-/* 버튼을 눌렀을 때 들어가는 듯한 효과 */
-.button:hover {
-  background-color: var(--cream);
-  transform: translate(3px, 3px);
-  box-shadow: 0px 0px 0px var(--coffee-bean);
+/* --- 설정 책 스타일 --- */
+.settingsBook {
+  background: linear-gradient(135deg, var(--cappuccino), var(--mocha));
 }
 
-
-.questionIcon {
-  position: absolute;
-  top: -15px;
-  right: -15px;
-  width: 25px;
-  height: 25px;
-  background-color: #ECC7C7;
-  border: 3px solid var(--mocha);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: var(--mocha);
-  font-size: 1.1rem;
+.settingsIcon {
+  color: var(--dark-roast);
+  opacity: 0.7;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
 }
-/* --- 모달 스타일 --- */
+
+.settingsBook:hover .settingsIcon {
+  transform: rotate(90deg);
+}
+
+.settingsIconInModal {
+  color: var(--dark-roast);
+}
+
+/* --- 모달 스타일 (요청하신 디자인으로 복구) --- */
 .modalBackdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(36, 22, 15, 0.7);
+backdrop-filter: blur(5px);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
 }
 
 .modalContent {
-  background-color: var(--milk);
-  padding: 2rem;
-  border-radius: 8px;
-  border: 2px solid var(--coffee-bean);
-  box-shadow: 5px 5px 0px var(--dark-roast);
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
+background-color: var(--milk-foam);
+padding: 2rem;
+border-radius: 8px;
+border: 2px solid var(--coffee-bean);
+box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+width: 60%;
+max-width: 400px;
+text-align: center;
+position: relative;
+}
+
+.modalIcon {
+position: absolute;
+top: -25px;
+left: 50%;
+transform: translateX(-50%);
+width: 50px;
+height: 50px;
+background-color: var(--latte);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(--dark-roast);
+border: 3px solid var(--dark-roast);
 }
 
 .modalContent h2 {
-  color: var(--dark-roast);
-  margin-top: 0;
+color: var(--dark-roast);
+margin-top: 1.5rem;
 }
 
 .modalContent p {
-  color: var(--espresso);
-  margin-bottom: 1.5rem;
+color: var(--espresso);
+margin-bottom: 1.5rem;
 }
 
 .modalInput {
-  width: 100%;
-  padding: 0.8rem;
-  margin-bottom: 1.5rem;
-  border-radius: 4px;
-  border: 2px solid var(--cappuccino);
-  background-color: var(--milk-foam);
-  font-size: 1rem;
-  box-sizing: border-box;
+width: 100%;
+padding: 0.8rem;
+margin-bottom: 1.5rem;
+border-radius: 4px;
+border: 2px solid var(--cappuccino);
+background-color: #fff;
+font-size: 1rem;
+box-sizing: border-box;
+color: var(--espresso);
 }
 
 .modalInput:focus {
-  outline: none;
-  border-color: var(--latte);
+outline: none;
+border-color: var(--latte);
+box-shadow: 0 0 5px var(--latte);
 }
 
 .modalActions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+display: flex;
+justify-content: center;
+gap: 1rem;
 }
 
 .modalButton {
-  padding: 0.8rem 1.5rem;
-  border: 2px solid var(--coffee-bean);
-  border-radius: 4px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  background-color: var(--macchiato);
-  color: var(--dark-roast);
+padding: 0.8rem 1.5rem;
+border: 2px solid var(--coffee-bean);
+border-radius: 4px;
+font-weight: 700;
+cursor: pointer;
+transition: all 0.2s ease-in-out;
+background-color: var(--macchiato);
+color: var(--dark-roast);
+box-shadow: 2px 2px 0px var(--coffee-bean);
 }
 
 .modalButton:hover {
-  filter: brightness(1.1);
+transform: translate(2px, 2px);
+box-shadow: none;
 }
 
 .submitButton {
-  background-color: var(--latte);
-  color: var(--dark-roast);
+background-color: var(--latte);
 }

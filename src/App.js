@@ -36,8 +36,8 @@ function App() {
           <Route path="/room/:roomCode" element={<MultiChat />} />
         </Routes>
       </main>
-
-      {showFooter && <Footer />}
+{/* 
+      {showFooter && <Footer />} */}
     </div>
   );
 }

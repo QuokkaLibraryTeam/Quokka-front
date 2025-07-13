@@ -1,7 +1,8 @@
-/*
-  :root 가상 클래스를 사용하여 전체 문서에서 사용할 수 있는 CSS 변수를 정의합니다.
-  제공된 커피 테마 색상 팔레트를 변수로 등록하여 재사용성을 높입니다.
-*/
+/* index.css 또는 App.css */
+@import url('https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap');
+
+/* :root 가상 클래스를 사용하여 전체 문서에서 사용할 수 있는 CSS 변수를 정의합니다.
+  제공된 커피 테마 색상 팔레트를 변수로 등록하여 재사용성을 높입니다. */
 :root {
   --dark-roast: #24160F;
   --espresso: #4E2F1B;
@@ -17,23 +18,16 @@
   --milk: #F3E0C1;
 }
 
-/*
-  body 태그에 기본 스타일을 적용합니다.
-  앱의 기본 배경색과 글꼴을 설정합니다.
-*/
+/* body 태그에 기본 스타일을 적용합니다. */
 body {
   margin: 0;
-  /* 시스템의 기본 글꼴을 우선적으로 사용하도록 설정합니다. */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  /* 폰트를 'Gamja Flower'로 변경합니다. */
+  font-family: 'Gamja Flower', cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  /* 앱의 기본 배경색을 CSS 변수를 사용하여 지정합니다. */
   background-color: var(--milk);
 }
-
 /*
   React 앱의 기본 코드에 포함된 .App-logo 스피너 애니메이션을 위한 코드입니다.
   필요 없다면 삭제해도 무방합니다.

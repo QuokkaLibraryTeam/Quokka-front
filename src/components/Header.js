@@ -56,14 +56,15 @@ const BackIcon = ({ className }) => (
   
     // 기본 헤더 UI
     return (
-      <header className={styles.header}>
-        <button className={styles.menuButton} aria-label="메뉴 열기">
-          <MenuIcon className={styles.icon} />
-        </button>
-        <button className={styles.profileButton} aria-label="프로필 보기">
-          <UserIcon className={styles.icon} />
-        </button>
-      </header>
+      <></>
+      // <header className={styles.header}>
+      //   <button className={styles.menuButton} aria-label="메뉴 열기">
+      //     <MenuIcon className={styles.icon} />
+      //   </button>
+      //   <button className={styles.profileButton} aria-label="프로필 보기">
+      //     <UserIcon className={styles.icon} />
+      //   </button>
+      // </header>
     );
   };
   
