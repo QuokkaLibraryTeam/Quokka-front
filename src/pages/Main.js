@@ -31,7 +31,26 @@ const Main = () => {
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
     const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
     const [title, setTitle] = useState('');
+    
+    // --- ⭐️ TTS 설정 상태 추가 ---
+    const [ttsConfig, setTtsConfig] = useState({
+        voice: 'female', // 'male' or 'female'
+        rate: 1,      // 0.5 ~ 2
+        pitch: 1,     // 0 ~ 2
+    });
 
+    // 컴포넌트 마운트 시 로컬 스토리지에서 TTS 설정 불러오기
+    useEffect(() => {
+        const savedConfig = localStorage.getItem('ttsConfig');
+        if (savedConfig) {
+            setTtsConfig(JSON.parse(savedConfig));
+        } else {
+            // 기본값이 없으면 저장
+            localStorage.setItem('ttsConfig', JSON.stringify(ttsConfig));
+        }
+    }, []);
+    
+    // 사용자 인증 로직
     useEffect(() => {
         const checkAuthStatus = async () => {
             const token = localStorage.getItem('access_token');
@@ -77,13 +96,19 @@ const Main = () => {
             alert(error.message);
         }
     };
+    
+    // --- ⭐️ TTS 설정 변경 핸들러 추가 ---
+    const handleTtsConfigChange = (field, value) => {
+        const newConfig = { ...ttsConfig, [field]: value };
+        setTtsConfig(newConfig);
+        localStorage.setItem('ttsConfig', JSON.stringify(newConfig));
+    };
 
     return (
         <>
             <div className={styles.mainContainer}>
                 <div className={styles.bookshelf}>
-                    {/* 첫 번째 책장 칸 */}
-                    
+                    {/* (생략) 책장 UI는 기존과 동일 */}
                     <div className={styles.shelf}>
                         <div className={`${styles.book} ${styles.bookImage}`}>
                              <LazyImage src={menu3} alt="내 서재" />
@@ -93,7 +118,6 @@ const Main = () => {
                             <span className={styles.bookTitle}>다른 사람 동화 구경하기</span>
                         </div>
                     </div>
-                    {/* 두 번째 책장 칸 */}
                     <div className={styles.shelf}>
                         <div className={`${styles.book} ${styles.bookButton}`} onClick={() => navigate('/multiplayer')}>
                             <span className={styles.bookTitle}>함께 만들기</span>
@@ -103,7 +127,6 @@ const Main = () => {
                             <span className={styles.bookTitle}>새 동화<br/>만들기</span>
                         </div>
                     </div>
-                    {/* 세 번째 책장 칸 */}
                     <div className={styles.shelf}>
                         <div className={`${styles.book} ${styles.bookImage}`}>
                             <LazyImage src={menu1} alt="동화 학습" />
@@ -117,7 +140,7 @@ const Main = () => {
                 </div>
             </div>
 
-            {/* 새 동화 만들기 모달 */}
+            {/* 새 동화 만들기 모달 (기존과 동일) */}
             {isCreateModalOpen && (
                 <div className={styles.modalBackdrop}>
                     <div className={styles.modalContent}>
@@ -144,15 +167,68 @@ const Main = () => {
                 </div>
             )}
 
-            {/* 설정 모달 */}
+            {/* --- ⭐️ 설정 모달 UI 수정 --- */}
             {isSettingsModalOpen && (
                 <div className={styles.modalBackdrop}>
                     <div className={styles.modalContent}>
                         <div className={styles.modalIcon}>
                             <CogIcon className={styles.settingsIconInModal} />
                         </div>
-                        <h2>설정</h2>
-                        <p>준비 중입니다.</p>
+                        <h2>TTS 설정</h2>
+                        
+                        {/* 목소리 선택 */}
+                        <div className={styles.settingsGroup}>
+                            <label className={styles.settingsLabel}>목소리</label>
+                            <div className={styles.segmentedControl}>
+                                <button 
+                                    className={`${styles.segmentButton} ${ttsConfig.voice === 'female' ? styles.active : ''}`}
+                                    onClick={() => handleTtsConfigChange('voice', 'female')}>
+                                    여성
+                                </button>
+                                <button 
+                                    className={`${styles.segmentButton} ${ttsConfig.voice === 'male' ? styles.active : ''}`}
+                                    onClick={() => handleTtsConfigChange('voice', 'male')}>
+                                    남성
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 속도 조절 */}
+                        <div className={styles.settingsGroup}>
+                            <label className={styles.settingsLabel}>속도</label>
+                            <div className={styles.sliderContainer}>
+                                <span>느리게</span>
+                                <input 
+                                    type="range" 
+                                    min="0.5" 
+                                    max="1.5" 
+                                    step="0.1" 
+                                    value={ttsConfig.rate}
+                                    className={styles.slider}
+                                    onChange={(e) => handleTtsConfigChange('rate', parseFloat(e.target.value))}
+                                />
+                                <span>빠르게</span>
+                            </div>
+                        </div>
+
+                        {/* 음높이 조절 */}
+                        <div className={styles.settingsGroup}>
+                            <label className={styles.settingsLabel}>음높이</label>
+                            <div className={styles.sliderContainer}>
+                                <span>낮게</span>
+                                <input 
+                                    type="range" 
+                                    min="0.5" 
+                                    max="1.5" 
+                                    step="0.1" 
+                                    value={ttsConfig.pitch}
+                                    className={styles.slider}
+                                    onChange={(e) => handleTtsConfigChange('pitch', parseFloat(e.target.value))}
+                                />
+                                <span>높게</span>
+                            </div>
+                        </div>
+
                         <div className={styles.modalActions}>
                             <button type="button" onClick={() => setSettingsModalOpen(false)} className={`${styles.modalButton} ${styles.submitButton}`}>닫기</button>
                         </div>
