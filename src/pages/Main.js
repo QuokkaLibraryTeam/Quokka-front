@@ -113,11 +113,11 @@ const Main = () => {
             <div className={styles.mainContainer}>
                 <div className={styles.bookshelf}>
                     <div className={styles.shelf}>
-                        <div className={`${styles.book} ${styles.bookImage}`}>
+                        <div className={`${styles.book} ${styles.bookImage}`} onClick={() => navigate('/mypage')}>
                              <LazyImage src={menu3} alt="내 서재" />
                             <span className={styles.bookTitle}>내가 만든<br/>동화 보기</span>
                         </div>
-                        <div className={`${styles.book} ${styles.bookButton}`}>
+                        <div className={`${styles.book} ${styles.bookButton}`} onClick={() => navigate('/share')}> 
                             <span className={styles.bookTitle}>다른 사람 동화 구경하기</span>
                         </div>
                     </div>

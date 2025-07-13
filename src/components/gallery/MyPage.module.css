@@ -1,435 +1,174 @@
 /* MyPage.module.css */
 
-/* --- 메인 컨테이너 --- */
+/* --- 메인 컨테이너 (책장 배경) --- */
 .mainContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    padding-top: 100px !important;
-    padding: 2rem 1rem;
-    font-family: 'Gamja Flower', cursive;
-    background-color: var(--espresso);
-    background-image: 
-        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
-        linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
-    background-size: 200px 200px, cover;
-    box-sizing: border-box;
-  }
-  
-  /* --- 컨텐츠 래퍼 (책장 스타일) --- */
-  .contentWrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background-color: var(--dark-roast); /* 깊이감을 위한 어두운 배경 */
-    border-radius: 10px;
-    padding: 35px 20px; /* 테두리 두께(15px) + 내부 여백(20px) */
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* 외부 그림자 */
-  }
-  
-  .contentWrapper::before, .contentWrapper::after {
-    content: '';
-    position: absolute;
-    border-radius: 10px;
-    z-index: -1;
-  }
-  
-  .contentWrapper::before {
-    top: 0; left: 0; right: 0; bottom: 0;
-    box-shadow: 
-        inset 8px 8px 15px -5px rgba(0,0,0,0.6),
-        inset -8px -8px 15px -5px rgba(255,255,255,0.1);
-  }
-  
-  .contentWrapper::after {
-    top: 15px; left: 15px; right: 15px; bottom: 15px;
-    background-color: rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-  }
-  
-  /* --- 페이지 제목 --- */
-  .pageTitle {
-    color: var(--vanilla-light);
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 2rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* --- 카드 그리드 --- */
-  .cardGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-    justify-items: center;
-  }
-  
-  /* --- 메시지 스타일 --- */
-  .message {
-    text-align: center;
-    color: var(--vanilla-light);
-    font-size: 1.5rem;
-    font-weight: 600;
-    padding: 3rem 1rem;
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* --- 스토리 카드 컨테이너 --- */
-  .storyCardWrapper {
-    position: relative;
-    overflow: hidden;
-    width: 180px;
-    height: 240px;
-  }
-  
-  /* --- 스토리 카드 (책 디자인) --- */
-  .storyCard {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 180px;
-    height: 240px;
-    border-radius: 4px 8px 8px 4px;
-    cursor: pointer;
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    text-align: center;
-    padding: 15px;
-    box-sizing: border-box;
-    border: 1px solid var(--dark-roast);
-    box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
-    background: linear-gradient(135deg, var(--caramel), var(--vanilla-light));
-    z-index: 2;
-  }
-  
-  /* 책 등뼈 효과 */
-  .storyCard::before {
-    content: '';
-    position: absolute;
-    left: 8px;
-    top: 0;
-    width: 3px;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.15);
-    border-radius: 3px;
-  }
-  
-  /* 책 페이지 효과 */
-  .storyCard::after {
-    content: '';
-    position: absolute;
-    right: 3px;
-    top: 5px;
-    width: 4px;
-    height: calc(100% - 10px);
-    background: repeating-linear-gradient(
-      to bottom, 
-      rgba(255,255,255,0.2), 
-      rgba(255,255,255,0.2) 1px, 
-      transparent 1px, 
-      transparent 2px
-    );
-  }
-  
-  .storyCard:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 8px 8px 15px rgba(0,0,0,0.4);
-  }
-  
-  .storyCard.grabbing {
-    cursor: grabbing;
-  }
-  
-  /* --- 카드 썸네일 --- */
-  .cardThumbnail {
-    max-width: 100%;
-    max-height: 140px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    border-radius: 4px;
-    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
-    margin-bottom: 10px;
-  }
-  
-  /* --- 카드 정보 --- */
-  .cardInfo {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .cardTitle {
-    color: var(--dark-roast);
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1.2;
-    word-break: keep-all;
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
-    text-align: center;
-  }
-  
-  /* --- 카드 액션 버튼들 --- */
-  .cardActions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    width: 120px;
-    z-index: 1;
-    border-radius: 4px 8px 8px 4px;
-    overflow: hidden;
-  }
-  
-  .actionButton {
-    flex: 1;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    color: white;
-    border-radius: 0;
-  }
-  
-  .shareButton {
-    background: linear-gradient(135deg, var(--latte), var(--cappuccino));
-    color: var(--dark-roast);
-    border-bottom: 1px solid var(--dark-roast);
-  }
-  
-  .shareButton:hover {
-    background: linear-gradient(135deg, var(--cappuccino), var(--latte));
-    transform: scale(1.05);
-  }
-  
-  .deleteButton {
-    background: linear-gradient(135deg, #d32f2f, #b71c1c);
-    color: white;
-  }
-  
-  .deleteButton:hover {
-    background: linear-gradient(135deg, #b71c1c, #d32f2f);
-    transform: scale(1.05);
-  }
-  
-  /* --- 모달 공통 스타일 --- */
-  .modalBackdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(36, 22, 15, 0.7);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modalContent {
-    background-color: var(--milk-foam);
-    padding: 2.5rem;
-    border-radius: 15px;
-    border: 2px solid var(--coffee-bean);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    width: 60%;
-    max-width: 420px;
-    text-align: center;
-    position: relative;
-  }
-  
-  .modalIcon {
-    position: absolute;
-    top: -28px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 56px;
-    height: 56px;
-    background-color: var(--latte);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--dark-roast);
-    border: 4px solid var(--milk-foam);
-    font-size: 1.5rem;
-  }
-  
-  .modalContent h2 {
-    color: var(--dark-roast);
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 1.8rem;
-  }
-  
-  .modalContent p {
-    color: var(--espresso);
-    margin-bottom: 1.5rem;
-    line-height: 1.4;
-  }
-  
-  .modalActions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  
-  .modalButton {
-    padding: 0.8rem 1.5rem;
-    border: 2px solid var(--coffee-bean);
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    background-color: var(--macchiato);
-    color: var(--dark-roast);
-    box-shadow: 2px 2px 0px var(--coffee-bean);
-    font-family: 'Gamja Flower', cursive;
-    font-size: 1rem;
-  }
-  
-  .modalButton:hover {
-    transform: translate(2px, 2px);
-    box-shadow: none;
-  }
-  
-  .modalButton.deleteButton {
-    background-color: #d32f2f;
-    color: white;
-    border-color: #b71c1c;
-    box-shadow: 2px 2px 0px #b71c1c;
-  }
-  
-  .modalButton.deleteButton:hover {
-    background-color: #b71c1c;
-  }
-  
-  /* --- 책장 선반 효과 (선택사항) --- */
-  .cardGrid::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 0;
-    right: 0;
-    height: 10px;
-    background: linear-gradient(
-      to bottom, 
-      var(--cappuccino) 0%,
-      var(--mocha) 40%,
-      var(--coffee-bean) 100%
-    );
-    box-shadow: 
-      0 2px 5px rgba(0, 0, 0, 0.4),
-      inset 0 -1px 1px rgba(0,0,0,0.3);
-    border-radius: 2px;
-  }
-  
-  /* --- 반응형 디자인 --- */
-  @media (max-width: 768px) {
-    .mainContainer {
-      padding: 1rem 0.5rem;
-    }
-    
-    .contentWrapper {
-      padding: 25px 15px;
-    }
-    
-    .pageTitle {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .cardGrid {
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 20px;
-    }
-    
-    .storyCardWrapper {
-      width: 160px;
-      height: 220px;
-    }
-    
-    .storyCard {
-      width: 160px;
-      height: 220px;
-      padding: 12px;
-    }
-    
-    .cardThumbnail {
-      max-height: 120px;
-    }
-    
-    .cardTitle {
-      font-size: 1.2rem;
-    }
-    
-    .modalContent {
-      width: 85%;
-      padding: 2rem;
-    }
-    
-    .modalContent h2 {
-      font-size: 1.5rem;
-    }
-    
-    .modalActions {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .pageTitle {
-      font-size: 1.8rem;
-    }
-    
-    .cardGrid {
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 15px;
-    }
-    
-    .storyCardWrapper {
-      width: 140px;
-      height: 200px;
-    }
-    
-    .storyCard {
-      width: 140px;
-      height: 200px;
-      padding: 10px;
-    }
-    
-    .cardThumbnail {
-      max-height: 100px;
-    }
-    
-    .cardTitle {
-      font-size: 1.1rem;
-    }
-    
-    .modalContent {
-      width: 90%;
-      padding: 1.5rem;
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* 컨텐츠를 위에서부터 정렬 */
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  font-family: 'Gamja Flower', cursive;
+  background-color: var(--espresso);
+  background-image: 
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
+      linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
+  background-size: 200px 200px, cover;
+  box-sizing: border-box;
+}
+
+/* --- 컨텐츠 래퍼 (책장 프레임) --- */
+.contentWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--dark-roast);
+  border-radius: 10px;
+  padding: 35px 20px;
+  width: 100%;
+  max-width: 420px;
+  min-height: calc(100vh - 4rem);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.contentWrapper::before, .contentWrapper::after {
+  content: '';
+  position: absolute;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+.contentWrapper::before {
+  top: 0; left: 0; right: 0; bottom: 0;
+  box-shadow: 
+      inset 8px 8px 15px -5px rgba(0,0,0,0.6),
+      inset -8px -8px 15px -5px rgba(255,255,255,0.1);
+}
+
+.contentWrapper::after {
+  top: 15px; left: 15px; right: 15px; bottom: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* --- 페이지 제목 --- */
+.pageTitle {
+  color: var(--vanilla-light);
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 1;
+}
+
+/* --- 동화 카드 그리드 --- */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+  position: relative;
+  z-index: 1;
+  padding: 10px;
+}
+
+/* --- 로딩/에러 메시지 --- */
+.message {
+  text-align: center;
+  color: var(--vanilla-light);
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 3rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- 스토리 카드 --- */
+.storyCardWrapper {
+  position: relative;
+}
+
+.storyCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  aspect-ratio: 3 / 4; /* 책 비율 */
+  border-radius: 4px 8px 8px 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  text-align: center;
+  box-sizing: border-box;
+  border: 1px solid var(--dark-roast);
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, var(--caramel), var(--vanilla-light));
+  overflow: hidden;
+}
+
+.storyCard:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 8px 8px 15px rgba(0,0,0,0.4);
+}
+
+.cardThumbnail {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+}
+
+.cardInfo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  width: 100%;
+}
+
+.cardTitle {
+  color: var(--dark-roast);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  word-break: keep-all;
+  text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
+}
+
+/* --- 삭제 버튼 --- */
+.deleteButton {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background-color: #d32f2f;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease-in-out;
+  z-index: 3;
+}
+
+.storyCardWrapper:hover .deleteButton {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.deleteButton:hover {
+  background-color: #b71c1c;
+  transform: scale(1.1) !important;
+}
