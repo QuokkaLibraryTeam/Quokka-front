@@ -9,6 +9,8 @@ import AuthCallback from "./pages/AuthCallBack";
 import Chat from './components/generator/Chat'; // pages 폴더로 이동했다고 가정
 import Room from './components/generator/Room';
 import MultiChat from './components/generator/MultiChat';
+import MyPage from './components/gallery/MyPage';
+import SharePage from './components/gallery/SharePage';
 
 function App() {
   const location = useLocation();
@@ -34,6 +36,8 @@ function App() {
           <Route path="/chat/story/:storyId" element={<Chat />} />
           <Route path="/multiplayer" element={<Room />} />
           <Route path="/room/:roomCode" element={<MultiChat />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/share" element={<SharePage/>} />
         </Routes>
       </main>
 {/* 

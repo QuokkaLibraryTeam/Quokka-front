@@ -1,22 +1,60 @@
 /* Chat.module.css */
 
-/*
-  채팅 페이지 전체를 감싸는 컨테이너입니다.
-  메시지 기록(chatContainer)과 입력 영역(inputArea)으로 나뉩니다.
-*/
+/* --- 페이지 전체 배경 --- */
 .chatPage {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
-  padding: 1rem;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  font-family: 'Gamja Flower', cursive; /* 메인과 동일한 폰트 적용 */
+  background-color: var(--espresso);
+  background-image: 
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
+      linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
+  background-size: 200px 200px, cover;
   box-sizing: border-box;
-  background-color: var(--milk); /* 전체 배경색을 부드러운 우유 색으로 설정 */
+  align-items: center; /* 콘텐츠를 중앙에 정렬 */
+}
+
+/* --- 채팅 내용을 감싸는 책장 --- */
+.chatBookshelf {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px; /* 메인 책장과 동일한 너비 */
+  height: calc(100vh - 4rem); /* 패딩값을 제외한 높이 */
+  background-color: var(--dark-roast);
+  border-radius: 10px;
+  padding: 35px 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  box-sizing: border-box;
+}
+
+/* 입체적인 프레임 효과 (메인 책장과 동일) */
+.chatBookshelf::before, .chatBookshelf::after {
+  content: '';
+  position: absolute;
+  border-radius: 10px;
+  z-index: 1; /* 메시지 기록보다 아래에 위치 */
+}
+
+.chatBookshelf::before {
+  top: 0; left: 0; right: 0; bottom: 0;
+  box-shadow: 
+      inset 8px 8px 15px -5px rgba(0,0,0,0.6),
+      inset -8px -8px 15px -5px rgba(255,255,255,0.1);
+}
+
+.chatBookshelf::after {
+  top: 15px; left: 15px; right: 15px; bottom: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
 }
 
 /*
   메시지 기록이 표시되는 영역입니다.
-  flex-grow: 1을 사용하여 남은 공간을 모두 차지하게 하고,
-  내용이 많아지면 스크롤이 생기도록 overflow-y: auto를 설정합니다.
+  책장 안에서 스크롤되도록 설정합니다.
 */
 .messageHistory {
   flex-grow: 1;
@@ -24,66 +62,166 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem; /* 메시지 간의 간격 */
+  gap: 1.25rem;
+  z-index: 2; /* 프레임보다 위에 위치 */
+  /* 스크롤바 디자인 (선택사항) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--cappuccino);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 }
 
-/* --- 메시지 버블 기본 스타일 --- */
+
+/* --- 메시지 버블 스타일 (메모지 느낌으로 변경) --- */
 .bubble {
-  padding: 0.8rem 1.5rem;
-  border-radius: 20px;
-  max-width: 75%;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  max-width: 80%;
   line-height: 1.5;
   font-size: 1.1rem;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+  border: 1px solid rgba(0,0,0,0.1);
 }
 
-/*
-  AI가 보내는 메시지 (질문) 스타일입니다.
-  왼쪽에 배치되며, 라떼 색상 배경에 어두운 글씨를 사용합니다.
-*/
+/* AI 메시지: 부드러운 크림색 메모지 */
 .aiBubble {
-  align-self: flex-start; /* 왼쪽 정렬 */
+  align-self: flex-start;
+  background-color: var(--milk-foam);
+  color: var(--dark-roast);
+  font-weight: 700;
+  border-bottom-left-radius: 2px;
+}
+
+/* 사용자 메시지: 따뜻한 라떼색 메모지 */
+.userBubble {
+  align-self: flex-end;
+  background-color: var(--latte);
+  color: var(--dark-roast);
+  font-weight: 600;
+  border-bottom-right-radius: 2px;
+}
+
+/* --- 하단 입력 영역 (책장 선반처럼 보이도록) --- */
+.inputArea {
+  flex-shrink: 0;
+  padding: 1.5rem 1rem 1rem; /* 위쪽 여백 추가 */
+  margin: 0 -1rem -1rem; /* 좌우, 아래 여백을 채워 선반처럼 보이게 함 */
+  position: relative;
+  z-index: 2;
+}
+
+/* 선반 시각 효과 */
+.inputArea::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10px; right: 10px;
+    height: 15px;
+    background: linear-gradient( to bottom, var(--cappuccino) 0%, var(--mocha) 40%, var(--coffee-bean) 100% );
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), inset 0 -1px 1px rgba(0,0,0,0.3);
+    border-radius: 2px;
+}
+
+
+/* 선택지 버튼 그리드 */
+.exampleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* 나무 버튼 스타일 */
+.choiceButton {
+  background: linear-gradient(135deg, var(--latte), var(--cappuccino));
+  border: 1px solid var(--dark-roast);
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark-roast);
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+  text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
+}
+
+.choiceButton:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.35);
+}
+
+.directInputButton {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, var(--cappuccino), var(--mocha));
+}
+
+
+/* 직접 입력 폼 (선반에 파인 홈처럼) */
+.textInputBox {
+  display: flex;
+  width: 100%;
+  background-color: rgba(0,0,0,0.2);
+  border: 1px solid rgba(0,0,0,0.4);
+  border-radius: 30px;
+  padding: 0.2rem;
+  margin-top: 1rem;
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+.textInputBox input {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  color: var(--milk-foam);
+  font-family: 'Gamja Flower', cursive;
+}
+
+.textInputBox input::placeholder {
+    color: var(--cappuccino);
+    opacity: 0.8;
+}
+
+/* 보내기 버튼 */
+.textInputBox button {
   background-color: var(--latte);
   color: var(--dark-roast);
   font-weight: 700;
-  border-bottom-left-radius: 4px; /* 말꼬리 느낌 */
+  border: none;
+  border-radius: 20px;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 2px 2px 3px rgba(0,0,0,0.2);
 }
 
-/*
-  사용자가 보내는 메시지 (답변) 스타일입니다.
-  오른쪽에 배치되며, 모카 색상 배경에 흰 글씨를 사용해 대비를 줍니다.
-*/
-.userBubble {
-  align-self: flex-end; /* 오른쪽 정렬 */
-  background-color: var(--mocha);
-  color: white;
-  font-weight: 600;
-  border-bottom-right-radius: 4px; /* 말꼬리 느낌 */
-}
-
-
-/* --- 시스템 상태 메시지 --- */
-.statusMessage {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    font-size: 1.2rem;
-    color: var(--mocha);
+.textInputBox button:hover {
+    background-color: var(--caramel);
+    transform: scale(1.05);
 }
 
 /* --- 일러스트 선택 영역 --- */
 .illustrationContainer {
     text-align: center;
     padding: 1rem;
-    background-color: var(--milk-foam);
+    background-color: rgba(255, 255, 255, 0.1); /* 배경과 어우러지도록 살짝 밝게 */
     border-radius: 15px;
     margin: 1rem 0;
+    border: 1px solid var(--cappuccino);
 }
 
 .illustrationContainer h4 {
-    color: var(--dark-roast);
+    color: var(--vanilla-light);
     margin-bottom: 1rem;
+    font-size: 1.2rem;
 }
 
 .illustrationGrid {
@@ -96,96 +234,24 @@
     width: 100%;
     border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     border: 3px solid transparent;
 }
 
-.illustrationImage:hover {
+.illustrationImage:hover,
+.illustrationImage.selected { /* 선택된 이미지 스타일 추가 */
     transform: scale(1.05);
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     border-color: var(--caramel);
 }
 
-
-/* --- 하단 입력 영역 --- */
-.inputArea {
-  flex-shrink: 0;
-  padding-top: 1rem;
-}
-
-/* 선택지 버튼 그리드 */
-.exampleGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.choiceButton {
-  background-color: var(--cappuccino);
-  border: 2px solid transparent;
-  border-radius: 20px;
-  padding: 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--dark-roast);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.choiceButton:hover {
-  background-color: var(--macchiato);
-  transform: translateY(-2px);
-}
-
-/* '내가 쓸게!' 버튼 스타일 */
-.directInputButton {
-  grid-column: 1 / -1; /* 그리드의 전체 너비를 차지하도록 수정 */
-  background-color: var(--espresso);
-  color: white;
-}
-
-.directInputButton:hover {
-    background-color: var(--coffee-bean);
-}
-
-/* 직접 입력 폼 */
-.textInputBox {
-  display: flex;
-  width: 100%;
-  background-color: var(--milk-foam);
-  border: 2px solid var(--cappuccino);
-  border-radius: 30px;
-  padding: 0.5rem;
-  margin-top: 1rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.textInputBox input {
-  flex-grow: 1;
-  border: none;
-  background: transparent;
-  outline: none;
-  padding: 0 1rem;
-  font-size: 1rem;
-  color: var(--dark-roast);
-}
-
-.textInputBox input::placeholder {
-    color: var(--mocha);
-}
-
-.textInputBox button {
-  background-color: var(--latte);
-  color: var(--dark-roast);
-  font-weight: 700;
-  border: none;
-  border-radius: 20px;
-  padding: 0.7rem 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.textInputBox button:hover {
-    background-color: var(--caramel);
+/* --- 시스템 상태 메시지 --- */
+.statusMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.2rem;
+    color: var(--cappuccino);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }

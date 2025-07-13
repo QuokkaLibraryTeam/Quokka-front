@@ -1,64 +1,41 @@
 /* Header.module.css */
 
-.header {
-    /* 배경색을 투명하게 하고 그림자 효과를 제거합니다. */
-    background-color: transparent;
-    padding: 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  /* 디자인 시안에 제목이 없으므로 해당 스타일은 제거합니다. */
-  
-  .menuButton {
-    /* 햄버거 아이콘 버튼에 배경색과 둥근 모서리를 적용합니다. */
-    background-color: var(--mocha);
-    padding: 0.6rem; /* 9.6px */
-    border-radius: 0.5rem; /* 8px */
-    transition: background-color 0.2s ease-in-out;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .menuButton:hover {
-    background-color: var(--latte);
-  }
-  
-  .profileButton {
-    /* 'MY' 텍스트 버튼 스타일 */
-    width: 3rem;    /* 48px */
-    height: 3rem;   /* 48px */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--mocha);
-    color: var(--milk-foam);
-    font-weight: 700;
-    font-size: 1rem;
-    border-radius: 9999px; /* 원형 버튼 */
-    transition: background-color 0.2s ease-in-out;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .profileButton:hover {
-    background-color: var(--latte);
-  }
-  
-  .icon {
-    width: 1.5rem; /* 24px */
-    height: 1.5rem; /* 24px */
-    color: var(--milk-foam);
-    /* 아이콘 자체에 그림자 효과를 추가합니다. */
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
-  }
-  
+/*
+  페이지 레이아웃에 영향을 주지 않도록
+  절대 위치를 사용하는 뒤로가기 버튼 컨테이너입니다.
+*/
+.backButtonHeader {
+  position: absolute;
+  top: 1.5rem; /* 화면 상단에서의 거리 */
+  right: 1.5rem; /* 화면 우측에서의 거리 */
+  z-index: 100; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+}
+
+/* 뒤로가기 버튼 자체의 스타일 (원래 네모난 형태로 수정) */
+.backButton {
+  background-color: rgba(40, 25, 15, 0.5); /* 반투명 배경 */
+  padding: 0.6rem; /* 원래 패딩값 적용 */
+  border-radius: 0.5rem; /* 원래의 둥근 모서리 값으로 수정 */
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px); /* 배경 블러 효과 (지원 브라우저) */
+}
+
+.backButton:hover {
+  background-color: rgba(60, 45, 35, 0.7);
+  transform: scale(1.05);
+}
+
+/* 아이콘 스타일 (원래 스타일로 복원) */
+.icon {
+  width: 1.5rem; /* 24px */
+  height: 1.5rem; /* 24px */
+  color: var(--milk-foam);
+  /* 아이콘 자체에 그림자 효과를 추가합니다. */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+}
