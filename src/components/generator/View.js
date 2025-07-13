@@ -37,12 +37,6 @@ const View = ({ draft, onReview }) => {
         }
     };
     
-    // '나가기' 버튼 핸들러
-    const handleExit = () => {
-        // 예를 들어 메인 페이지로 이동
-        navigate('/'); 
-    };
-
     // 현재 페이지가 동화 내용 페이지인지 확인
     const isContentPage = currentPage < paragraphs.length;
 
@@ -72,7 +66,7 @@ const View = ({ draft, onReview }) => {
                                 <button onClick={() => onReview('accept')} className={`${styles.actionButton} ${styles.continue}`}>
                                     이어서 만들래요
                                 </button>
-                                <button onClick={handleExit} className={`${styles.actionButton} ${styles.exit}`}>
+                                <button onClick={() => onReview('accept')}  className={`${styles.actionButton} ${styles.exit}`}>
                                     책 덮기
                                 </button>
                             </div>
