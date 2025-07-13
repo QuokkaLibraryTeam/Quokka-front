@@ -1,215 +1,210 @@
 /* Room.module.css */
+
+/* --- 전체 배경 (Main.module.css와 동일) --- */
 .container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 1rem;
-    box-sizing: border-box;
-    background: url('../../assets/images/quokka_bg.png') no-repeat center center; /* 쿼카 배경 이미지 */
-    background-size: contain;
-}
-
-.buttonGroup {
-    display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding: 2rem;
-    background-color: rgba(243, 224, 192, 0.8); /* 반투명 배경 */
-    border-radius: 20px;
-}
-
-.button {
-    background-color: var(--caramel);
-    color: var(--dark-roast);
-    font-weight: 700;
-    border: 2px solid var(--coffee-bean);
-    border-radius: 30px;
-    padding: 1rem 3rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 3px 3px 0px var(--coffee-bean);
-    white-space: nowrap;
-}
-
-.button:hover {
-    transform: translate(3px, 3px);
-    box-shadow: 0px 0px 0px var(--coffee-bean);
-}
-
-.hostingBox {
-    width: 100%;
-    max-width: 400px;
-    height: 70%;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 20px;
-    padding: 2rem;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 3rem;
-    border: 2px solid var(--cappuccino);
-}
-
-.codeSection {
-    text-align: center;
-    width: 100%;
-}
-
-.label {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--espresso);
-}
-
-.codeDisplay {
-    background-color: var(--milk-foam);
-    border: 2px solid var(--cappuccino);
-    border-radius: 10px;
-    padding: 1rem;
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--dark-roast);
-    margin-top: 0.5rem;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    font-family: 'Gamja Flower', cursive;
+    background-color: var(--espresso);
+    background-image: 
+        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
+        linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
+    background-size: 200px 200px, cover;
+    box-sizing: border-box;
+  }
+  
+  /* --- 중앙 컨텐츠 영역 (책장 스타일 적용) --- */
+  .roomBox {
     position: relative;
-    letter-spacing: 2px;
-    cursor: pointer; 
-}
-
-.topicForm {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-}
-
-.topicInput {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    font-size: 1.1rem;
-    border: 2px solid var(--cappuccino);
+    gap: 20px;
+    background-color: var(--dark-roast);
     border-radius: 10px;
-    background-color: var(--milk-foam);
-    color: var(--dark-roast);
+    padding: 35px 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     text-align: center;
-    box-sizing: border-box;
-}
-
-.topicInput::placeholder {
-    color: var(--mocha);
-}
-
-.topicInput:focus {
-    outline: none;
-    border-color: var(--latte);
-}
-
-.joiningBox {
-    width: 100%;
-    max-width: 400px;
-    padding: 2rem;
-    background-color: rgba(243, 224, 192, 0.8);
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.joinForm {
-    width: 100%;
+  }
+  
+  /* 책장 프레임 효과 */
+  .roomBox::before, .roomBox::after {
+    content: '';
+    position: absolute;
+    border-radius: 10px;
+    z-index: -1;
+  }
+  .roomBox::before {
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: 
+        inset 8px 8px 15px -5px rgba(0,0,0,0.6),
+        inset -8px -8px 15px -5px rgba(255,255,255,0.1);
+  }
+  .roomBox::after {
+    top: 15px; left: 15px; right: 15px; bottom: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  }
+  
+  /* --- 초기 버튼 그룹 --- */
+  .buttonGroup {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 1.5rem;
-}
-
-.codeInput {
+    padding: 2rem;
+  }
+  
+  /* --- 공용 버튼 스타일 (나무 책 느낌) --- */
+  .button {
+    background: linear-gradient(135deg, var(--latte), var(--cappuccino));
+    border: 1px solid var(--dark-roast);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark-roast);
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
     width: 100%;
-    padding: 0.8rem 1rem;
+  }
+  .button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.35);
+  }
+  
+  /* --- 방 참가 / 호스팅 UI 컨테이너 --- */
+  .joiningBox, .hostingBox {
+    background-color: var(--milk-foam);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* --- 폼 스타일 --- */
+  .topicForm, .joinForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* 입력창과 버튼 사이의 간격 */
+    width: 100%;
+  }
+  
+  .label {
     font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 2px;
-    text-align: center;
-    border: 2px solid var(--cappuccino);
-    border-radius: 10px;
-    background-color: var(--milk-foam);
     color: var(--dark-roast);
+    margin-bottom: 0.5rem;
+  }
+  
+  /* --- 주제 입력창 스타일 --- */
+  .topicInput {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 4px;
+    border: 2px solid var(--cappuccino);
+    background-color: #fff;
+    font-size: 1.2rem;
     box-sizing: border-box;
-}
-
-.codeInput::placeholder {
-    color: var(--mocha);
-    font-size: 1rem;
-    letter-spacing: normal;
-}
-
-.codeInput:focus {
+    color: var(--espresso);
+    text-align: center;
+    font-family: 'Gamja Flower', cursive;
+  }
+  
+  /* --- ⭐️ 수정된 부분: 코드 입력창 스타일 --- */
+  .codeInput {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 4px;
+    border: 2px solid var(--cappuccino);
+    background-color: #fff;
+    font-size: 1.4rem; /* 폰트 크기 조정 */
+    box-sizing: border-box;
+    color: var(--espresso);
+    text-align: center;
+    font-family: monospace; /* 헷갈리지 않는 고정폭 폰트 */
+    font-weight: 700;
+    letter-spacing: 3px; /* 글자 간격 조정 */
+  }
+  
+  .codeInput:focus, .topicInput:focus {
     outline: none;
     border-color: var(--latte);
-}
-
-.participantSection {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 0.5rem 1.5rem;
-    border-radius: 20px;
-    font-weight: 700;
-    color: var(--espresso);
-    border: 2px solid var(--cappuccino);
-}
-
-.keyboardPlaceholder {
-    color: var(--mocha);
-    font-weight: 600;
-}
-
-.waitingMessage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--espresso);
+    box-shadow: 0 0 8px var(--latte);
+  }
+  
+  /* --- 코드 복사 영역 --- */
+  .codeSection {
     text-align: center;
-}
-
-.notificationContainer {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 2000;
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 0.5rem;
-    align-items: flex-start;
-}
-
-.notification {
-    padding: 0.8rem 1.5rem;
-    background-color: rgba(0, 0, 0, 0.75);
-    color: white;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    animation: fadeInOut 3s ease-in-out forwards;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateY(20px); }
-    15% { opacity: 1; transform: translateY(0); }
-    85% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(20px); }
-}
-
-.copyCheckmark {
+  }
+  /* --- ⭐️ 수정된 부분: 코드 표시 영역 스타일 --- */
+  .codeDisplay {
+    position: relative;
+    background-color: var(--milk);
+    color: var(--dark-roast);
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 2px dashed var(--mocha);
+    cursor: pointer;
+    user-select: all;
+    transition: background-color 0.2s;
+    font-family: monospace; /* 헷갈리지 않는 고정폭 폰트 */
+    letter-spacing: 2px; /* 글자 간격 조정 */
+  }
+  .codeDisplay:hover {
+    background-color: var(--macchiato);
+  }
+  .copyCheckmark {
     position: absolute;
-    right: 10px;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #28a745;
-}
+    color: var(--dark-roast);
+  }
+  
+  /* --- 참가자 정보 --- */
+  .participantSection, .waitingMessage {
+    font-size: 1.2rem;
+    color: var(--mocha);
+    font-weight: 600;
+  }
+  
+  /* --- 알림창 --- */
+  .notificationContainer {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .notification {
+    background-color: var(--dark-roast);
+    color: var(--milk-foam);
+    padding: 0.8rem 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    font-size: 1rem;
+    font-weight: 600;
+    animation: fadeInOut 3s forwards;
+  }
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0; transform: translateY(-20px); }
+    10%, 90% { opacity: 1; transform: translateY(0); }
+  }
+  

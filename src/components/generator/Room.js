@@ -15,7 +15,7 @@ const Room = () => {
     const [topic, setTopic] = useState('');
     const [notifications, setNotifications] = useState([]);
     const [participantCount, setParticipantCount] = useState(0);
-    const [showCheckmark, setShowCheckmark] = useState(false); // 체크 아이콘 표시 전용 state
+    const [showCheckmark, setShowCheckmark] = useState(false);
 
     const socketRef = useRef(null);
     const viewRef = useRef(view);
@@ -134,20 +134,17 @@ const Room = () => {
         }
     };
 
-    // ★★★ 클립보드 복사 핸들러 수정
     const handleCopyCode = () => {
         if (!roomCode) return;
         navigator.clipboard.writeText(roomCode).then(() => {
-            // 체크 아이콘 표시
             setShowCheckmark(true);
             setTimeout(() => setShowCheckmark(false), 2000);
 
-            // 기존 알림 시스템에 "복사되었습니다" 메시지 추가
             const newNotification = { id: Date.now(), text: '복사되었습니다' };
             setNotifications(prev => [...prev, newNotification]);
             setTimeout(() => {
                 setNotifications(prev => prev.filter(n => n.id !== newNotification.id));
-            }, 2000); // 2초 후 사라짐
+            }, 2000);
         }).catch(err => {
             console.error('클립보드 복사 실패:', err);
             alert('복사에 실패했습니다.');
@@ -173,7 +170,7 @@ const Room = () => {
     const renderWaitingRoom = () => (
         <div className={styles.hostingBox}>
             <div className={styles.codeSection}>
-                <label className={styles.label}>CODE</label>
+                <label className={styles.label}>코드를 눌러 주세요!</label>
                 <div className={styles.codeDisplay} onClick={handleCopyCode}>
                     {roomCode}
                     {showCheckmark && <CheckIcon className={styles.copyCheckmark} />}
@@ -188,13 +185,11 @@ const Room = () => {
             ) : (
                 <div className={styles.waitingMessage}>방장이 시작하기를 기다리고 있습니다...</div>
             )}
-            <div className={styles.keyboardPlaceholder}>키보드 위치 예상</div>
         </div>
     );
 
     return (
         <div className={styles.container}>
-            {/* ★★★ 모든 알림이 여기서 일관되게 처리됩니다. */}
             <div className={styles.notificationContainer}>
                 {notifications.map(notif => (
                     <div key={notif.id} className={styles.notification}>
@@ -203,29 +198,31 @@ const Room = () => {
                 ))}
             </div>
 
-            {view === 'initial' && (
-                <div className={styles.buttonGroup}>
-                    <button className={styles.button} onClick={handleCreateRoom}>방 만들기</button>
-                    <button className={styles.button} onClick={handleShowJoinView}>방 들어가기</button>
-                </div>
-            )}
-            {(view === 'hosting' || view === 'guest_waiting') && renderWaitingRoom()}
-            {view === 'joining' && (
-                <div className={styles.joiningBox}>
-                    <form onSubmit={handleJoinSubmit} className={styles.joinForm}>
-                        <label className={styles.label}>CODE를 입력해주세요!</label>
-                        <input
-                            type="text"
-                            className={styles.codeInput}
-                            value={roomCode}
-                            onChange={(e) => setRoomCode(e.target.value)}
-                            placeholder="코드를 입력하세요"
-                            autoFocus
-                        />
-                        <button type="submit" className={styles.button}>들어가기</button>
-                    </form>
-                </div>
-            )}
+            <div className={styles.roomBox}>
+                {view === 'initial' && (
+                    <div className={styles.buttonGroup}>
+                        <button className={styles.button} onClick={handleCreateRoom}>방 만들기</button>
+                        <button className={styles.button} onClick={handleShowJoinView}>방 들어가기</button>
+                    </div>
+                )}
+                {(view === 'hosting' || view === 'guest_waiting') && renderWaitingRoom()}
+                {view === 'joining' && (
+                    <div className={styles.joiningBox}>
+                        <form onSubmit={handleJoinSubmit} className={styles.joinForm}>
+                            <label className={styles.label}>CODE를 입력해주세요!</label>
+                            <input
+                                type="text"
+                                className={styles.codeInput}
+                                value={roomCode}
+                                onChange={(e) => setRoomCode(e.target.value)}
+                                placeholder="코드를 입력하세요"
+                                autoFocus
+                            />
+                            <button type="submit" className={styles.button}>들어가기</button>
+                        </form>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
