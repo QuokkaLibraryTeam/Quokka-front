@@ -1,6 +1,5 @@
 /* SharePage.module.css */
 
-/* --- 메인 컨테이너 (책장 배경) --- */
 .mainContainer {
     display: flex;
     flex-direction: column;
@@ -8,16 +7,15 @@
     justify-content: flex-start;
     min-height: 100vh;
     padding: 2rem 1rem;
-    font-family: 'Gamja Flower', cursive;
+    font-family: "Gamja Flower", cursive;
     background-color: var(--espresso);
     background-image: 
-        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
-        linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
+
+      linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
     background-size: 200px 200px, cover;
     box-sizing: border-box;
   }
-  
-  /* --- 컨텐츠 래퍼 (책장 프레임) --- */
   .contentWrapper {
     position: relative;
     display: flex;
@@ -25,204 +23,201 @@
     gap: 1rem;
     background-color: var(--dark-roast);
     border-radius: 10px;
-    padding: 35px 20px;
+    padding: 20px;
     width: 100%;
     max-width: 420px;
-    min-height: calc(100vh - 4rem);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    height: calc(100vh - 4rem);
+    max-height: 800px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
   }
   
-  .contentWrapper::before, .contentWrapper::after {
-    content: '';
+  /* === (중요) 수정된 부분 === */
+  .contentWrapper::before,
+  .contentWrapper::after {
+    content: "";
     position: absolute;
     border-radius: 10px;
-    z-index: -1;
+    z-index: 0;
+    pointer-events: none; /* 클릭 이벤트를 통과시키도록 설정 */
   }
   
   .contentWrapper::before {
-    top: 0; left: 0; right: 0; bottom: 0;
-    box-shadow: 
-        inset 8px 8px 15px -5px rgba(0,0,0,0.6),
-        inset -8px -8px 15px -5px rgba(255,255,255,0.1);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 8px 8px 15px -5px rgba(0, 0, 0, 0.6),
+      inset -8px -8px 15px -5px rgba(255, 255, 255, 0.1);
   }
   
   .contentWrapper::after {
-    top: 15px; left: 15px; right: 15px; bottom: 15px;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
     background-color: rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
   }
   
-  /* --- 페이지 제목 --- */
   .pageTitle {
     color: var(--vanilla-light);
     font-size: 2.5rem;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 0.5rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    padding-top: 10px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
-  
-  /* --- 태그 컨테이너 --- */
   .tagContainer {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 1rem;
-      padding: 0 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px 0;
+    gap: 10px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  
+  .tagContainer::-webkit-scrollbar {
+    display: none;
+  }
   .tagButton {
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      border: 2px solid var(--cappuccino);
-      background-color: transparent;
-      color: var(--cappuccino);
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 2px solid var(--cappuccino);
+    background-color: transparent;
+    color: var(--cappuccino);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    white-space: nowrap;
   }
-  
   .tagButton:hover {
-      background-color: var(--cappuccino);
-      color: var(--dark-roast);
+    background-color: var(--cappuccino);
+    color: var(--dark-roast);
   }
-  
   .tagButton.active {
-      background-color: var(--latte);
-      color: var(--dark-roast);
-      border-color: var(--latte);
+    background-color: var(--latte);
+    color: var(--dark-roast);
+    border-color: var(--latte);
   }
-  
-  /* --- 동화 목록 --- */
   .storyList {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      overflow-y: auto;
-      padding: 0 5px;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 10px;
+    margin: 0 -10px -10px;
+    position: relative; /* z-index가 적용되도록 */
+    z-index: 1;
   }
-  
-  /* --- 동화 아이템 --- */
+  .storyList::-webkit-scrollbar {
+    width: 8px;
+  }
+  .storyList::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .storyList::-webkit-scrollbar-thumb {
+    background-color: var(--cappuccino);
+    border-radius: 4px;
+  }
   .storyItem {
-      background-color: var(--milk-foam);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      border: 1px solid var(--mocha);
+    background-color: var(--milk-foam);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--mocha);
+    cursor: pointer; /* 카드 전체가 클릭 가능함을 표시 */
   }
-  
   .storyHeader {
-      position: relative;
+    position: relative;
   }
-  
   .storyImage {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background-color: #eee;
   }
-  
   .titleOverlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-      padding: 1.5rem 1rem 0.8rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
   }
-  
   .storyTitle {
-      margin: 0;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  
+  .likeCountDisplay {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    flex-shrink: 0;
+    transition: transform 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+  }
+  .likeCountDisplay:hover {
+    transform: scale(1.1);
+  }
+  .likedHeart {
+    color: #ff8a80;
+    text-shadow: 0 0 8px #ff8a80;
+  }
   .storyContent {
-      padding: 1rem;
+    padding: 1rem;
   }
-  
   .storyActions {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 1rem;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0; /* 내용이 없으므로 margin 제거 */
   }
-  
   .actionButton {
-      flex: 1;
-      padding: 0.6rem;
-      border-radius: 8px;
-      border: 1px solid var(--cappuccino);
-      background-color: var(--milk);
-      color: var(--mocha);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
+    flex: 1;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid var(--cappuccino);
+    background-color: var(--milk);
+    color: var(--mocha);
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: "Gamja Flower", cursive;
+    font-size: 1rem;
   }
-  
   .actionButton.liked {
-      background-color: #ff8a80; /* 빨간색 계열 */
-      color: white;
-      border-color: #ff8a80;
+    background-color: #ff8a80;
+    color: white;
+    border-color: #ff8a80;
   }
-  
-  /* --- 댓글 섹션 --- */
-  .commentsSection {
-      margin-top: 1rem;
-      border-top: 1px solid var(--cappuccino);
-      padding-top: 1rem;
-  }
-  
-  .commentList {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 1rem 0;
-      max-height: 150px;
-      overflow-y: auto;
-  }
-  
-  .commentItem {
-      padding: 0.5rem;
-      border-bottom: 1px solid var(--milk);
-      font-size: 0.95rem;
-      color: var(--dark-roast);
-  }
-  .commentItem strong {
-      color: var(--mocha);
-  }
-  
-  .commentForm {
-      display: flex;
-      gap: 10px;
-  }
-  
-  .commentForm input {
-      flex-grow: 1;
-      border: 1px solid var(--cappuccino);
-      border-radius: 8px;
-      padding: 0.6rem;
-      font-family: 'Gamja Flower', cursive;
-      font-size: 1rem;
-  }
-  
-  .commentForm button {
-      background-color: var(--latte);
-      border: none;
-      border-radius: 8px;
-      padding: 0 1rem;
-      font-weight: 700;
-      color: var(--dark-roast);
-      cursor: pointer;
-  }
-  
-  /* --- 로딩/에러 메시지 --- */
   .message {
-      text-align: center;
-      color: var(--vanilla-light);
-      font-size: 1.5rem;
-      font-weight: 600;
-      padding: 3rem 1rem;
+    text-align: center;
+    color: var(--vanilla-light);
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 3rem 1rem;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  

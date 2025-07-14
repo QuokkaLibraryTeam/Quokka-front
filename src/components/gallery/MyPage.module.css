@@ -1,11 +1,11 @@
 /* MyPage.module.css */
 
-/* --- 메인 컨테이너 (책장 배경) --- */
+/* --- 메인 컨테이너 (페이지 전체 배경) --- */
 .mainContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* 컨텐츠를 위에서부터 정렬 */
+  justify-content: center; /* 중앙 정렬로 변경 */
   min-height: 100vh;
   padding: 2rem 1rem;
   font-family: 'Gamja Flower', cursive;
@@ -17,51 +17,100 @@
   box-sizing: border-box;
 }
 
-/* --- 컨텐츠 래퍼 (책장 프레임) --- */
-.contentWrapper {
+/* --- 책장 전체 틀 (Main.module.css에서 가져옴) --- */
+.bookshelf {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
   background-color: var(--dark-roast);
   border-radius: 10px;
-  padding: 35px 20px;
+  padding: 20px; /* 내부 여백 단순화 */
   width: 100%;
   max-width: 420px;
-  min-height: calc(100vh - 4rem);
+  height: calc(100vh - 4rem); /* 화면 높이에 맞게 설정 */
+  max-height: 800px; /* 최대 높이 제한 */
   box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  box-sizing: border-box;
 }
 
-.contentWrapper::before, .contentWrapper::after {
+/* 입체적인 프레임 효과 */
+.bookshelf::before, .bookshelf::after {
   content: '';
   position: absolute;
   border-radius: 10px;
-  z-index: -1;
+  z-index: 0;
 }
 
-.contentWrapper::before {
+.bookshelf::before {
   top: 0; left: 0; right: 0; bottom: 0;
   box-shadow: 
       inset 8px 8px 15px -5px rgba(0,0,0,0.6),
       inset -8px -8px 15px -5px rgba(255,255,255,0.1);
 }
 
-.contentWrapper::after {
+.bookshelf::after {
   top: 15px; left: 15px; right: 15px; bottom: 15px;
   background-color: rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
 }
 
-/* --- 페이지 제목 --- */
+/* --- 상단 헤더 (제목, 뒤로가기 버튼) --- */
+.header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    padding-top: 10px;
+}
+
+.backButton {
+    position: absolute;
+    left: 0;
+    background: none;
+    border: none;
+    color: var(--vanilla-light);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    transition: transform 0.2s;
+}
+
+.backButton:hover {
+    transform: translateX(-5px);
+}
+
 .pageTitle {
   color: var(--vanilla-light);
   font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* --- 카드 스크롤 영역 --- */
+.cardScrollArea {
+  flex: 1; /* 헤더를 제외한 나머지 공간을 모두 차지 */
+  overflow-y: auto; /* 내용이 많아지면 세로 스크롤 생성 */
   position: relative;
   z-index: 1;
+  padding: 10px;
+  margin: 0 -10px -10px; /* 스크롤바가 패딩 영역에 나타나도록 조정 */
+}
+
+/* 스크롤바 디자인 (선택 사항) */
+.cardScrollArea::-webkit-scrollbar {
+  width: 8px;
+}
+.cardScrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.cardScrollArea::-webkit-scrollbar-thumb {
+  background-color: var(--cappuccino);
+  border-radius: 4px;
+  border: 2px solid transparent;
 }
 
 /* --- 동화 카드 그리드 --- */
@@ -69,8 +118,6 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 25px;
-  position: relative;
-  z-index: 1;
   padding: 10px;
 }
 
@@ -80,9 +127,8 @@
   color: var(--vanilla-light);
   font-size: 1.5rem;
   font-weight: 600;
-  padding: 3rem 1rem;
-  position: relative;
-  z-index: 1;
+  padding: 4rem 1rem;
+  line-height: 1.5;
 }
 
 /* --- 스토리 카드 --- */
@@ -111,11 +157,13 @@
 .storyCard:hover {
   transform: translateY(-8px) scale(1.05);
   box-shadow: 8px 8px 15px rgba(0,0,0,0.4);
+  z-index: 5; /* 호버 시 다른 카드 위로 올라오도록 */
 }
 
 .cardThumbnail {
   width: 100%;
   height: 70%;
+  background-color: #eee;
   object-fit: cover;
 }
 
@@ -151,7 +199,7 @@
   color: white;
   font-size: 1.5rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 26px; /* 텍스트 수직 정렬 */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -160,7 +208,7 @@
   opacity: 0;
   transform: scale(0.5);
   transition: all 0.2s ease-in-out;
-  z-index: 3;
+  z-index: 6; /* 카드보다 위에 오도록 */
 }
 
 .storyCardWrapper:hover .deleteButton {
@@ -171,4 +219,116 @@
 .deleteButton:hover {
   background-color: #b71c1c;
   transform: scale(1.1) !important;
+}
+/* --- 모달 공통 스타일 (추가) --- */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(36, 22, 15, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: var(--milk-foam);
+  padding: 2rem;
+  border-radius: 8px;
+  border: 2px solid var(--coffee-bean);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  /* 모달 애니메이션 */
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalIcon {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: var(--latte);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d32f2f; /* 삭제 아이콘 색상 */
+  font-size: 1.5rem;
+  border: 3px solid var(--dark-roast);
+}
+
+.modalContent h2 {
+  color: var(--dark-roast);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.modalContent p {
+  color: var(--espresso);
+  margin-bottom: 2rem; /* 여백 증가 */
+  line-height: 1.6;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modalButton {
+  padding: 0.8rem 1.5rem;
+  border: 2px solid var(--coffee-bean);
+  border-radius: 4px;
+  font-family: 'Gamja Flower', cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: var(--macchiato);
+  color: var(--dark-roast);
+  box-shadow: 2px 2px 0px var(--coffee-bean);
+}
+
+.modalButton:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.modalButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.submitButton {
+  background-color: #d32f2f; /* 삭제 버튼 색상 */
+  color: white;
+  border-color: #b71c1c;
+  box-shadow: 2px 2px 0px #b71c1c;
+}
+
+.cancelButton {
+  background-color: transparent;
+  color: var(--mocha);
+  border-color: var(--mocha);
+  box-shadow: 2px 2px 0px var(--mocha);
 }

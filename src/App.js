@@ -11,6 +11,8 @@ import Room from './components/generator/Room';
 import MultiChat from './components/generator/MultiChat';
 import MyPage from './components/gallery/MyPage';
 import SharePage from './components/gallery/SharePage';
+import StoryView from './components/gallery/StoryView';
+import ShareView from './components/gallery/ShareView';
 
 function App() {
   const location = useLocation();
@@ -37,7 +39,9 @@ function App() {
           <Route path="/multiplayer" element={<Room />} />
           <Route path="/room/:roomCode" element={<MultiChat />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/view/story/:story_id" element={<StoryView />} />
           <Route path="/share" element={<SharePage/>} />
+          <Route path="/share/:story_id" element={<ShareView/>} />
         </Routes>
       </main>
 {/* 
