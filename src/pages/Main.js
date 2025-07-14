@@ -132,9 +132,9 @@ const Main = () => {
                         </div>
                     </div>
                     <div className={styles.shelf}>
-                        <div className={`${styles.book} ${styles.bookImage}`}>
+                        <div className={`${styles.book} ${styles.bookImage}`} onClick={() => navigate('/quiz')}>
                             <LazyImage src={menu1} alt="동화 학습" />
-                            <span className={styles.bookTitle}>동화 학습</span>
+                            <span className={styles.bookTitle}>동화 퀴즈</span>
                         </div>
                         <div className={`${styles.book} ${styles.settingsBook}`} onClick={() => setSettingsModalOpen(true)}>
                             <CogIcon className={styles.settingsIcon} />
