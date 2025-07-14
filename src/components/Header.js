@@ -22,9 +22,9 @@ const Header = ({ type = 'main' }) => {
     return (
       // 레이아웃에 영향을 주지 않는 새로운 헤더 컨테이너 사용
       <header className={styles.backButtonHeader}>
-        <button onClick={() => navigate(-1)} className={styles.backButton} aria-label="뒤로 가기">
+        {/* <button onClick={() => navigate(-1)} className={styles.backButton} aria-label="뒤로 가기">
           <BackIcon className={styles.icon} />
-        </button>
+        </button> */}
       </header>
     );
   }

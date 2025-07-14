@@ -264,7 +264,7 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(36, 22, 15, 0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000;
   }
   .modalContent {
-      background-color: var(--milk-foam); padding: 2rem; border-radius: 8px; border: 2px solid var(--coffee-bean); width: 6ch; max-width: 400px; text-align: center; position: relative;
+      background-color: var(--milk-foam); padding: 2rem; border-radius: 8px; border: 2px solid var(--coffee-bean); width: 60%; max-width: 400px; text-align: center; position: relative;
   }
   .modalIcon {
       position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; background-color: var(--latte); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--dark-roast); font-size: 1.5rem; border: 3px solid var(--dark-roast);

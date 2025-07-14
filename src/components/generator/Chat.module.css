@@ -4,8 +4,9 @@
 .chatPage {
   display: flex;
   flex-direction: column;
-  min-height: 50vh;
+  min-height: 100vh;
   padding: 2rem 1rem;
+  padding-top: 100px;
   font-family: 'Gamja Flower', cursive; /* 메인과 동일한 폰트 적용 */
   background-color: var(--espresso);
   background-image: 
@@ -21,9 +22,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 90%;
   max-width: 420px; /* 메인 책장과 동일한 너비 */
-  height: calc(100vh - 4rem); /* 패딩값을 제외한 높이 */
+  height: calc(90vh - 4rem); /* 패딩값을 제외한 높이 */
   background-color: var(--dark-roast);
   border-radius: 10px;
   padding: 35px 20px;

@@ -7,6 +7,7 @@
     justify-content: flex-start;
     min-height: 100vh;
     padding: 2rem 1rem;
+    padding-top: 100px;
     font-family: "Gamja Flower", cursive;
     background-color: var(--espresso);
     background-image: 
@@ -16,7 +17,8 @@
     background-size: 200px 200px, cover;
     box-sizing: border-box;
   }
-  .contentWrapper {
+  /* --- 컨텐츠 래퍼 (책장 프레임) --- */
+.contentWrapper {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -32,16 +34,14 @@
     box-sizing: border-box;
   }
   
-  /* === (중요) 수정된 부분 === */
   .contentWrapper::before,
   .contentWrapper::after {
     content: "";
     position: absolute;
     border-radius: 10px;
     z-index: 0;
-    pointer-events: none; /* 클릭 이벤트를 통과시키도록 설정 */
+    pointer-events: none;
   }
-  
   .contentWrapper::before {
     top: 0;
     left: 0;
@@ -50,7 +50,6 @@
     box-shadow: inset 8px 8px 15px -5px rgba(0, 0, 0, 0.6),
       inset -8px -8px 15px -5px rgba(255, 255, 255, 0.1);
   }
-  
   .contentWrapper::after {
     top: 15px;
     left: 15px;
@@ -60,6 +59,7 @@
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
   }
   
+  /* --- 페이지 제목 --- */
   .pageTitle {
     color: var(--vanilla-light);
     font-size: 2.5rem;
@@ -71,6 +71,8 @@
     position: relative;
     z-index: 2;
   }
+  
+  /* --- 태그 컨테이너 --- */
   .tagContainer {
     display: flex;
     flex-wrap: nowrap;
@@ -106,6 +108,8 @@
     color: var(--dark-roast);
     border-color: var(--latte);
   }
+  
+  /* --- 동화 목록 --- */
   .storyList {
     flex: 1;
     overflow-y: auto;
@@ -114,7 +118,7 @@
     gap: 1.5rem;
     padding: 10px;
     margin: 0 -10px -10px;
-    position: relative; /* z-index가 적용되도록 */
+    position: relative;
     z-index: 1;
   }
   .storyList::-webkit-scrollbar {
@@ -133,7 +137,7 @@
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--mocha);
-    cursor: pointer; /* 카드 전체가 클릭 가능함을 표시 */
+    cursor: pointer;
   }
   .storyHeader {
     position: relative;
@@ -156,6 +160,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+    z-index: 2;
   }
   .storyTitle {
     margin: 0;
@@ -191,7 +196,7 @@
   .storyActions {
     display: flex;
     gap: 10px;
-    margin-bottom: 0; /* 내용이 없으므로 margin 제거 */
+    margin-bottom: 0;
   }
   .actionButton {
     flex: 1;
