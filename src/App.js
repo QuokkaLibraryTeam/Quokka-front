@@ -15,6 +15,7 @@ import StoryView from './components/gallery/StoryView';
 import ShareView from './components/gallery/ShareView';
 import Quiz from './components/generator/Quiz';
 import QuizPage from './components/generator/QuizPage';
+import QuizView from './components/generator/QuizView';
 
 function App() {
   const location = useLocation();
@@ -45,6 +46,7 @@ function App() {
           <Route path="/share" element={<SharePage/>} />
           <Route path="/share/:story_id" element={<ShareView/>} />
           <Route path="/quiz/:storyId" element={<Quiz />} />
+          <Route path="/view/quiz/:storyId" element={<QuizView />} />
           <Route path="/quiz" element={<QuizPage />} />
         </Routes>
       </main>

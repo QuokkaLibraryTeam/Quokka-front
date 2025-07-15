@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './Chat.module.css';
 import View from './View'; // View 컴포넌트 import
-
+//type:rejected 하면 필터링됨
 const Chat = () => {
     const { storyId } = useParams();
     const navigate = useNavigate();
@@ -15,18 +15,36 @@ const Chat = () => {
     const [draftData, setDraftData] = useState(null);
     const [showTextInput, setShowTextInput] = useState(false);
     const [inputValue, setInputValue] = useState('');
+    const [isAiTyping, setIsAiTyping] = useState(false);
+    const [showToast, setShowToast] = useState(false);
     
+    // --- Ref 관리 ---
     const socketRef = useRef(null);
     const historyEndRef = useRef(null);
+    // ⭐️ 1. messageHistory의 최신 값을 담을 ref 생성
+    const messageHistoryRef = useRef(messageHistory);
     const BACKEND_URL = 'http://localhost:8000';
 
     // --- 효과 훅 ---
 
-    // 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
+    // ⭐️ 2. messageHistory 상태가 변경될 때마다 ref의 .current 값을 업데이트
     useEffect(() => {
-        historyEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        messageHistoryRef.current = messageHistory;
     }, [messageHistory]);
     
+    useEffect(() => {
+        historyEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messageHistory, isAiTyping]);
+    
+    useEffect(() => {
+        if (showToast) {
+            const timer = setTimeout(() => {
+                setShowToast(false);
+            }, 2500);
+            return () => clearTimeout(timer);
+        }
+    }, [showToast]);
+
     useEffect(() => {
         let isCancelled = false;
 
@@ -38,7 +56,7 @@ const Chat = () => {
             }
 
             try {
-                // (생략: 기존 코드와 동일)
+                // ... (기존 fetch 및 WebSocket 연결 로직은 동일)
                 const storyResponse = await fetch(`/api/v1/users/me/stories/${storyId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -71,14 +89,25 @@ const Chat = () => {
 
                 socketRef.current.onmessage = (event) => {
                     if (isCancelled) return;
+                    setIsAiTyping(false);
                     const data = JSON.parse(event.data);
                     
                     if (data.type === 'question') {
-                        setMessageHistory(prev => [...prev, { sender: 'ai', text: data.text }]);
+                        // ⭐️ 3. state 대신 항상 최신 값을 가리키는 ref를 사용
+                        const currentMessageHistory = messageHistoryRef.current;
+                        const lastAiMessage = currentMessageHistory.slice().reverse().find(msg => msg.sender === 'ai');
+                        
+                        if (currentMessageHistory.length > 0 && lastAiMessage && lastAiMessage.text === data.text) {
+                            setShowToast(true);
+                        } else {
+                            setMessageHistory(prev => [...prev, { sender: 'ai', text: data.text }]);
+                        }
+
                         setExamples(data.examples || []);
                         setIllustrations([]);
                         setDraftData(null);
                         setShowTextInput(false);
+
                     } else if (data.type === 'illustration') {
                         setIllustrations(data.urls || []);
                         setExamples([]);
@@ -112,7 +141,7 @@ const Chat = () => {
         };
     }, [storyId, navigate]);
 
-    // --- 핸들러 함수 (생략: 기존 코드와 동일) ---
+    // --- 핸들러 함수 (이하 동일) ---
     const handleAnswerSubmit = (text) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
             setMessageHistory(prev => [...prev, { sender: 'user', text }]);
@@ -120,6 +149,7 @@ const Chat = () => {
             setExamples([]);
             setShowTextInput(false);
             setInputValue('');
+            setIsAiTyping(true);
         }
     };
     
@@ -146,8 +176,7 @@ const Chat = () => {
         }
     };
     
-    // --- UI 렌더링 로직 ---
-
+    // --- UI 렌더링 로직 (이하 동일) ---
     const renderInputArea = () => {
         if (illustrations.length > 0) return null;
 
@@ -173,38 +202,33 @@ const Chat = () => {
     }
 
     if (status === 'initializing' || status === 'connecting') {
-        // 로딩 메시지도 chatPage 스타일을 적용해 일관성을 유지합니다.
-        return (
-            <div className={styles.chatPage}>
-                <div className={styles.statusMessage}>AI와 연결 중입니다...</div>
-            </div>
-        );
+        return <div className={styles.chatPage}><div className={styles.statusMessage}>AI와 연결 중입니다...</div></div>;
     }
     if (status === 'closed') {
-        return (
-            <div className={styles.chatPage}>
-                <div className={styles.statusMessage}>연결이 끊어졌습니다. 페이지를 새로고침 해주세요.</div>
-            </div>
-        );
+        return <div className={styles.chatPage}><div className={styles.statusMessage}>연결이 끊어졌습니다. 페이지를 새로고침 해주세요.</div></div>;
     }
-
     if (draftData) {
         return <View draft={draftData} onReview={handleDraftReview} />;
     }
     
     return (
         <div className={styles.chatPage}>
-            {/* --- ⭐️ 수정된 부분 시작 ⭐️ --- */}
-            {/* 1. chatBookshelf 컨테이너 추가 */}
             <div className={styles.chatBookshelf}>
-                {/* 메시지 기록 영역 */}
                 <div className={styles.messageHistory}>
                     {messageHistory.map((msg, index) => (
                         <div key={index} className={`${styles.bubble} ${msg.sender === 'ai' ? styles.aiBubble : styles.userBubble}`}>
                             {msg.text}
                         </div>
                     ))}
-                    {/* 일러스트 선택 UI */}
+                    
+                    {isAiTyping && (
+                        <div className={`${styles.bubble} ${styles.aiBubble}`}>
+                            <div className={styles.typingIndicator}>
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    )}
+
                     {illustrations.length > 0 && (
                          <div className={styles.illustrationContainer}>
                             <h4>마음에 드는 삽화를 골라주세요</h4>
@@ -228,12 +252,16 @@ const Chat = () => {
                     <div ref={historyEndRef} />
                 </div>
 
-                {/* 하단 입력 영역 */}
                 <div className={styles.inputArea}>
                     {renderInputArea()}
                 </div>
             </div>
-            {/* --- ⭐️ 수정된 부분 끝 ⭐️ --- */}
+
+            {showToast && (
+                <div className={styles.toast}>
+                    부적절한 단어가 포함되었어요!
+                </div>
+            )}
         </div>
     );
 };

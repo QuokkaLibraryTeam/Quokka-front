@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styles from './StoryView.module.css'; 
-import { FaPaperPlane, FaEdit, FaTrash, FaComment } from 'react-icons/fa';
+import styles from './StoryView.module.css';
+import { FaPaperPlane, FaEdit, FaTrash } from 'react-icons/fa';
 
 const ShareView = () => {
     const { story_id } = useParams();
@@ -13,25 +13,35 @@ const ShareView = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
-    const [ttsConfig, setTtsConfig] = useState({ voice: 'female', rate: 1, pitch: 1 });
-    const [isSpeaking, setIsSpeaking] = useState(false);
 
     // --- 댓글 관련 상태 ---
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
     const [editingComment, setEditingComment] = useState({ id: null, text: '' });
-    
+
     // --- 삭제 확인 모달 상태 ---
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
 
     const myNickname = localStorage.getItem('nickname');
 
+    // --- 날짜 포매팅 함수 ---
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        // YYYY.MM.DD HH:MM 형식으로 변환
+        return date.toLocaleDateString('ko-KR', {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit',
+        }).slice(0, -1) + ' ' + date.toLocaleTimeString('ko-KR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+    };
+
     // --- 데이터 로딩 ---
     useEffect(() => {
-        const savedTtsConfig = localStorage.getItem('ttsConfig');
-        if (savedTtsConfig) setTtsConfig(JSON.parse(savedTtsConfig));
-
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -42,11 +52,11 @@ const ShareView = () => {
 
                 if (!storyRes.ok) throw new Error('동화 정보를 불러올 수 없습니다.');
                 if (!commentsRes.ok) throw new Error('댓글 정보를 불러올 수 없습니다.');
-                
+
                 const storyData = await storyRes.json();
                 const commentsData = await commentsRes.json();
 
-                setStory(storyData.story); 
+                setStory(storyData.story);
                 setComments(commentsData);
 
             } catch (err) {
@@ -59,8 +69,7 @@ const ShareView = () => {
         fetchData();
         return () => window.speechSynthesis.cancel();
     }, [story_id, BACKEND_URL]);
-    
-    // 댓글 목록을 새로고침하는 함수
+
     const fetchComments = async () => {
         try {
             const res = await fetch(`${BACKEND_URL}/api/v1/comments/community/comment/${story_id}`);
@@ -72,28 +81,21 @@ const ShareView = () => {
         }
     };
 
-    // --- 페이지네이션 데이터 가공 ---
     const pages = useMemo(() => {
         if (!story?.scenes) return [];
         const allPages = [];
         story.scenes.forEach(scene => {
             const filename = scene.image_url.split('/').pop();
             const imageUrl = `${BACKEND_URL}/illustrations/${filename}`;
-            const paragraphs = scene.text.split('\n').filter(p => p.trim() !== '');
-            paragraphs.forEach(p => {
-                allPages.push({ text: p, imageUrl: imageUrl });
-            });
+            allPages.push({ text: scene.text, imageUrl: imageUrl });
         });
         return allPages;
     }, [story, BACKEND_URL]);
 
-    // 마지막 페이지는 댓글을 위해 +1
     const totalPages = pages.length > 0 ? pages.length + 1 : 1;
 
-    // --- 핸들러 함수 ---
+    // --- 핸들러 ---
     const handleNavigation = (direction) => {
-        window.speechSynthesis.cancel();
-        setIsSpeaking(false);
         if (direction === 'next' && currentPage < totalPages - 1) {
             setCurrentPage(currentPage + 1);
         } else if (direction === 'prev' && currentPage > 0) {
@@ -101,15 +103,12 @@ const ShareView = () => {
         }
     };
     const handleExit = () => navigate(-1);
-    const handleParagraphClick = (text) => { /* 이전과 동일 */ };
 
-    // --- 댓글 핸들러 ---
     const handlePostComment = async (e) => {
         e.preventDefault();
         if (!newComment.trim()) return;
         const token = localStorage.getItem('access_token');
         if (!token) return alert('로그인이 필요합니다.');
-
         try {
             await fetch(`${BACKEND_URL}/api/v1/comments/community/comment`, {
                 method: 'POST',
@@ -120,12 +119,11 @@ const ShareView = () => {
             fetchComments();
         } catch (err) { alert('댓글 작성에 실패했습니다.'); }
     };
-    
+
     const handleUpdateComment = async (commentId) => {
         if (!editingComment.text.trim()) return;
         const token = localStorage.getItem('access_token');
         if (!token) return alert('로그인이 필요합니다.');
-
         try {
             await fetch(`${BACKEND_URL}/api/v1/comments/community/comment/${commentId}`, {
                 method: 'PUT',
@@ -137,24 +135,17 @@ const ShareView = () => {
         } catch (err) { alert('댓글 수정에 실패했습니다.'); }
     };
 
-    // 댓글 삭제 모달 열기
     const openDeleteModal = (commentId) => {
         setCommentToDelete(commentId);
         setIsDeleteModalOpen(true);
     };
 
-    // 댓글 삭제 모달 닫기
-    const closeDeleteModal = () => {
-        setCommentToDelete(null);
-        setIsDeleteModalOpen(false);
-    };
+    const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
-    // 댓글 삭제 실행
     const confirmDeleteComment = async () => {
         if (!commentToDelete) return;
         const token = localStorage.getItem('access_token');
         if (!token) return alert('로그인이 필요합니다.');
-
         try {
             await fetch(`${BACKEND_URL}/api/v1/comments/community/comment/${commentToDelete}`, {
                 method: 'DELETE',
@@ -167,12 +158,10 @@ const ShareView = () => {
             closeDeleteModal();
         }
     };
-    
-    // --- 렌더링 로직 ---
-    if (loading) return <div className={styles.loading}>동화책을 펼치는 중...</div>;
-    if (error) return <div className={styles.error}>{error}</div>;
 
-    const isContentPage = currentPage < pages.length;
+    // --- 렌더링 로직 ---
+    if (loading) return <div className={styles.loading}>동화책을 펼치는 중... 📖</div>;
+    if (error) return <div className={styles.error}>{error}</div>;
 
     const renderDeleteModal = () => {
         if (!isDeleteModalOpen) return null;
@@ -193,32 +182,43 @@ const ShareView = () => {
 
     const renderLastPage = () => (
         <div className={styles.lastPageContainer}>
-            <h3 className={styles.finalTitle}>이야기에 대한 생각들</h3>
+            <h3 className={styles.finalTitle}>이야기에 대한 생각 나누기</h3>
             <div className={styles.commentsContent}>
                 <ul className={styles.commentList}>
                     {comments.length > 0 ? comments.map(comment => (
-                        <li key={comment.id} className={styles.commentItem}>
+                        <li key={comment.id} className={styles.commentCard}>
                             {editingComment.id === comment.id ? (
                                 <div className={styles.editingForm}>
-                                    <input type="text" value={editingComment.text} onChange={(e) => setEditingComment({ ...editingComment, text: e.target.value })}/>
-                                    <button onClick={() => handleUpdateComment(comment.id)}>저장</button>
-                                    <button onClick={() => setEditingComment({ id: null, text: '' })}>취소</button>
+                                    <textarea
+                                        value={editingComment.text}
+                                        onChange={(e) => setEditingComment({ ...editingComment, text: e.target.value })}
+                                        className={styles.editingInput}
+                                        rows="2"
+                                    />
+                                    <div className={styles.editingActions}>
+                                        <button onClick={() => handleUpdateComment(comment.id)}>저장</button>
+                                        <button onClick={() => setEditingComment({ id: null, text: '' })}>취소</button>
+                                    </div>
                                 </div>
                             ) : (
                                 <>
-                                    <div className={styles.commentText}>
-                                        <strong>{comment.user_nickname}:</strong> {comment.text}
-                                    </div>
-                                    {myNickname === comment.user_nickname && (
-                                        <div className={styles.commentActions}>
-                                            <button onClick={() => setEditingComment({ id: comment.id, text: comment.text })}><FaEdit/></button>
-                                            <button onClick={() => openDeleteModal(comment.id)}><FaTrash/></button>
+                                    <div className={styles.commentHeader}>
+                                        <div className={styles.commentAuthorInfo}>
+                                            <span className={styles.commentAuthor}>{comment.user_nickname}</span>
+                                            <span className={styles.commentTimestamp}>{formatTimestamp(comment.created_at)}</span>
                                         </div>
-                                    )}
+                                        {myNickname === comment.user_nickname && (
+                                            <div className={styles.commentActions}>
+                                                <button onClick={() => setEditingComment({ id: comment.id, text: comment.text })}><FaEdit/></button>
+                                                <button onClick={() => openDeleteModal(comment.id)}><FaTrash/></button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className={styles.commentBody}>{comment.text}</p>
                                 </>
                             )}
                         </li>
-                    )) : <p className={styles.commentMessage}>아직 댓글이 없습니다.</p>}
+                    )) : <p className={styles.commentMessage}>첫 번째 댓글을 남겨<br/>이야기를 시작해보세요!</p>}
                 </ul>
             </div>
             <form onSubmit={handlePostComment} className={styles.commentForm}>
@@ -232,13 +232,15 @@ const ShareView = () => {
     return (
         <div className={styles.viewContainer}>
             <div className={styles.bookContainer}>
-                {isContentPage ? (
+                {currentPage < pages.length ? (
                     <div className={styles.pageContent}>
                         <div className={styles.imageWrapper}>
                             <img src={pages[currentPage]?.imageUrl} alt={`삽화 ${currentPage + 1}`} className={styles.draftImage} />
                         </div>
-                        <p className={`${styles.storyParagraph} ${isSpeaking ? styles.speaking : ''}`} onClick={() => handleParagraphClick(pages[currentPage]?.text)}>
-                            {pages[currentPage]?.text}
+                        <p className={styles.storyParagraph}>
+                            {pages[currentPage]?.text.split('\n').map((line, index) => (
+                                <React.Fragment key={index}>{line}<br/></React.Fragment>
+                            ))}
                         </p>
                     </div>
                 ) : (

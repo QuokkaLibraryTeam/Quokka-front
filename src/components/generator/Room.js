@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Room.module.css';
 
 const CheckIcon = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
         <polyline points="20 6 9 17 4 12" />
     </svg>
 );
@@ -11,7 +11,7 @@ const CheckIcon = ({ className }) => (
 const Room = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [view, setView] = useState('initializing'); // 초기 상태
+    const [view, setView] = useState('initializing');
     const [roomCode, setRoomCode] = useState('');
     const [topic, setTopic] = useState('');
     const [notifications, setNotifications] = useState([]);
@@ -21,6 +21,16 @@ const Room = () => {
     const socketRef = useRef(null);
     const viewRef = useRef(view);
     viewRef.current = view;
+    const shouldDeleteOnUnmount = useRef(true);
+
+    // ⭐️ 요청하신 `notifications`를 사용하는 알림 함수
+    const showNotification = (text, duration = 3000) => {
+        const newNotification = { id: Date.now() + Math.random(), text };
+        setNotifications(prev => [...prev, newNotification]);
+        setTimeout(() => {
+            setNotifications(prev => prev.filter(n => n.id !== newNotification.id));
+        }, duration);
+    };
 
     const fetchRoomInfo = async (code) => {
         const token = localStorage.getItem('access_token');
@@ -31,10 +41,8 @@ const Room = () => {
             if (response.ok) {
                 const roomInfo = await response.json();
                 setParticipantCount(roomInfo.users.length);
-            } else {
-                if (viewRef.current === 'guest_waiting') {
-                    navigate('/');
-                }
+            } else if (viewRef.current === 'guest_waiting') {
+                navigate('/');
             }
         } catch (error) {
             console.error("방 정보 갱신 중 에러:", error);
@@ -47,27 +55,40 @@ const Room = () => {
         const wsUrl = `ws://localhost:8000/api/v1/ws/localshare/${code}`;
         socketRef.current = new WebSocket(wsUrl, ['jwt', token]);
         socketRef.current.onopen = () => console.log(`[${code}] 대기방 웹소켓 연결 성공`);
-        socketRef.current.onmessage = (event) => {
+        socketRef.current.onmessage = async (event) => {
             const data = JSON.parse(event.data);
             if (data.type === 'notice') {
-                const newNotification = { id: Date.now(), text: data.text };
-                setNotifications(prev => [...prev, newNotification]);
+                showNotification(data.text);
                 fetchRoomInfo(code);
-                setTimeout(() => {
-                    setNotifications(prev => prev.filter(n => n.id !== newNotification.id));
-                }, 3000);
-            } else if (data.type === 'start_game') {
-                navigate(`/room/${code}`);
+            } else if (data.type === 'start_game' && data.topic) {
+                const title = data.topic;
+                const token = localStorage.getItem('access_token');
+                try {
+                    const response = await fetch('/api/v1/users/me/stories', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ title }),
+                    });
+                    if (!response.ok) throw new Error('스토리 생성에 실패했습니다.');
+                    const newStory = await response.json();
+                    
+                    shouldDeleteOnUnmount.current = false;
+                    console.log("새 스토리 생성:", newStory);
+
+                    navigate(`/chat/story/${newStory.id}`);
+                } catch (error) {
+                    showNotification(error.message);
+                }
             }
         };
         socketRef.current.onclose = () => {
-            if (viewRef.current === 'guest_waiting') {
-                alert("방장이 방을 나갔습니다. 메인 화면으로 돌아갑니다.");
-                navigate('/', { replace: true });
-            }
+            if (viewRef.current === 'guest_waiting' && shouldDeleteOnUnmount.current) {
+            showNotification("방장이 방을 나갔습니다. 메인 화면으로 돌아갑니다.");
+            navigate('/', { replace: true });
+        }
         };
         socketRef.current.onerror = () => {
-            alert("방에 연결할 수 없거나 존재하지 않는 방입니다.");
+            showNotification("방에 연결할 수 없거나 존재하지 않는 방입니다.");
             navigate('/', { replace: true });
         };
     };
@@ -86,7 +107,7 @@ const Room = () => {
             setParticipantCount(1);
             setTimeout(() => connectToSocket(data.room_code), 100);
         } catch (error) {
-            alert(error.message);
+            showNotification(error.message);
             navigate('/', { replace: true });
         }
     };
@@ -100,7 +121,7 @@ const Room = () => {
         e.preventDefault();
         const codeToJoin = roomCode.trim();
         if (!codeToJoin) {
-            alert('코드를 입력해주세요.');
+            showNotification('코드를 입력해주세요.');
             return;
         }
         const token = localStorage.getItem('access_token');
@@ -108,25 +129,26 @@ const Room = () => {
             const response = await fetch(`/api/v1/ws/localshare/rooms/${codeToJoin}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!response.ok) throw new Error();
+            if (!response.ok) throw new Error("방을 찾을 수 없습니다. 코드를 확인해주세요.");
             const roomInfo = await response.json();
             setView('guest_waiting');
             setRoomCode(codeToJoin);
             setParticipantCount(roomInfo.users.length);
             connectToSocket(codeToJoin);
         } catch (error) {
-            alert("방을 찾을 수 없습니다. 코드를 확인해주세요.");
+            showNotification(error.message);
         }
     };
     
     const handleTopicSubmit = (e) => {
         e.preventDefault();
-        if (!topic.trim()) {
-            alert('주제를 입력해주세요.');
+        const title = topic.trim();
+        if (!title) {
+            showNotification('주제를 적어 주세요!');
             return;
         }
         if (socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify({ type: 'start_game', topic: topic }));
+            socketRef.current.send(JSON.stringify({ type: 'start_game', topic: title }));
         }
     };
 
@@ -135,17 +157,12 @@ const Room = () => {
         navigator.clipboard.writeText(roomCode).then(() => {
             setShowCheckmark(true);
             setTimeout(() => setShowCheckmark(false), 2000);
-            const newNotification = { id: Date.now(), text: '복사되었습니다' };
-            setNotifications(prev => [...prev, newNotification]);
-            setTimeout(() => {
-                setNotifications(prev => prev.filter(n => n.id !== newNotification.id));
-            }, 2000);
+            showNotification('복사되었습니다'); // ⭐️ 요청하신 로직대로 수정
         }).catch(err => {
-            alert('복사에 실패했습니다.');
+            showNotification('복사에 실패했습니다.');
         });
     };
     
-    // Main.js에서 받은 action에 따라 뷰를 설정
     useEffect(() => {
         const action = location.state?.action;
         if (action === 'create') {
@@ -153,14 +170,13 @@ const Room = () => {
         } else if (action === 'join') {
             handleShowJoinView();
         } else {
-            // 잘못된 접근 시 메인으로 이동
             navigate('/', { replace: true });
         }
-    }, []); // 컴포넌트 마운트 시 한 번만 실행
+    }, [location.state, navigate]);
 
     useEffect(() => {
         return () => {
-            if (viewRef.current === 'hosting' && roomCode) {
+            if (viewRef.current === 'hosting' && shouldDeleteOnUnmount.current) {
                 const token = localStorage.getItem('access_token');
                 fetch(`/api/v1/ws/localshare/rooms/${roomCode}`, {
                     method: 'DELETE',
@@ -204,7 +220,6 @@ const Room = () => {
                     </div>
                 ))}
             </div>
-
             <div className={styles.roomBox}>
                 {view === 'initializing' && <div className={styles.waitingMessage}>준비 중...</div>}
                 {(view === 'hosting' || view === 'guest_waiting') && renderWaitingRoom()}

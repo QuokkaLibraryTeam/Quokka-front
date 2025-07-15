@@ -9,7 +9,7 @@
     padding: 2rem 1rem;
     font-family: 'Gamja Flower', cursive;
     background-color: var(--espresso);
-    background-image: 
+    background-image:
     url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><line x1='25' y1='10' x2='25' y2='120' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='12' stroke-linecap='round' /><line x1='60' y1='100' x2='60' y2='190' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='8' stroke-linecap='round' /><line x1='100' y1='5' x2='100' y2='80' stroke='%23C0946C' stroke-opacity='0.12' stroke-width='10' stroke-linecap='round' /><line x1='140' y1='40' x2='140' y2='180' stroke='%23C0946C' stroke-opacity='0.15' stroke-width='11' stroke-linecap='round' /><line x1='180' y1='10' x2='180' y2='95' stroke='%23C0946C' stroke-opacity='0.1' stroke-width='9' stroke-linecap='round' /></svg>"),
     linear-gradient(to bottom, var(--espresso), var(--coffee-bean));
     background-size: 200px 200px, cover;
@@ -28,7 +28,7 @@
     padding: 1.5rem;
     box-sizing: border-box;
   }
-  
+
   .loading, .error {
     display: flex;
     justify-content: center;
@@ -37,7 +37,7 @@
     font-size: 1.5rem;
     color: white;
   }
-  
+
   .pageContent {
     flex-grow: 1;
     display: flex;
@@ -46,7 +46,7 @@
     overflow: hidden;
     gap: 1.5rem;
   }
-  
+
   .imageWrapper {
     width: 100%;
     padding-top: 60%;
@@ -56,7 +56,7 @@
     background-color: #eee;
     flex-shrink: 0;
   }
-  
+
   .draftImage {
     position: absolute;
     top: 0;
@@ -65,7 +65,7 @@
     height: 100%;
     object-fit: cover;
   }
-  
+
   .storyParagraph {
     font-size: 1.3rem;
     line-height: 1.8;
@@ -76,7 +76,7 @@
     overflow-y: auto;
     padding-right: 5px;
   }
-  
+
   .footer {
     flex-shrink: 0;
     display: flex;
@@ -99,82 +99,184 @@
     cursor: not-allowed;
   }
   .pageIndicator { font-size: 1.1rem; }
-  
+
   /* --- 마지막 페이지 (댓글, 공유) 공통 스타일 --- */
-  .lastPageContainer, .finalChoicePage {
-      display: flex;
-      flex-direction: column;
-      justify-content: center; /* (수정) 콘텐츠를 중앙으로 정렬 */
-      height: 100%;
-      overflow: hidden;
-      padding-bottom: 20px; /* (추가) ShareView 하단 여백 */
-      box-sizing: border-box;
+  .lastPageContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
   }
-  
+
   .finalTitle {
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: var(--dark-roast);
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     flex-shrink: 0;
+    font-weight: 700;
   }
-  .finalSubtitle {
-      font-size: 1.2rem;
-      color: var(--mocha);
-      margin-bottom: 2rem;
-      text-align: center;
+
+  /* ⭐️ === 네이버 웹툰 스타일 댓글 (ShareView) === ⭐️ */
+  .commentsContent {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 5px 10px 5px 5px; /* 스크롤바 영역 확보 */
   }
-  
-  
-  /* === StoryView 마지막 페이지 버튼 스타일 수정 === */
-  .buttonGroup {
+
+  .commentList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
   }
-  .actionButton {
-      padding: 1rem;
-      border-radius: 4px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
+
+  /* 개별 댓글 카드 */
+  .commentCard {
+      background-color: #fff;
+      border: 1px solid var(--milk);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  /* 댓글 헤더 (작성자, 시간, 버튼) */
+  .commentHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+  }
+  .commentAuthorInfo {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 0.5rem;
-      font-size: 1.2rem;
-      box-shadow: 2px 2px 0px var(--coffee-bean); /* 입체 효과 */
   }
-  .actionButton:hover {
-      transform: translate(2px, 2px);
-      box-shadow: none;
-  }
-  
-  .actionButton.share {
-      background-color: var(--latte);
-      border: 2px solid var(--coffee-bean);
+  .commentAuthor {
+      font-weight: 700;
+      font-size: 1.1rem;
       color: var(--dark-roast);
   }
-  .actionButton.edit {
-      background-color: var(--macchiato);
-      border: 2px solid var(--coffee-bean);
-      color: var(--dark-roast);
-  }
-  .actionButton.unpublish {
-      background-color: #d32f2f;
-      border: 2px solid #b71c1c;
-      color: white;
-      box-shadow: 2px 2px 0px #b71c1c;
-  }
-  .actionButton.exit {
-      background-color: transparent;
-      border: 2px solid var(--mocha);
+  .commentTimestamp {
+      font-size: 0.8rem;
       color: var(--mocha);
-      box-shadow: 2px 2px 0px var(--mocha);
-      margin-top: 1rem;
+  }
+
+  /* 댓글 본문 */
+  .commentBody {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--espresso);
+      padding-left: 5px; /* 작성자와의 정렬을 위함 */
+  }
+
+  /* 수정, 삭제 버튼 */
+  .commentActions {
+      display: flex;
+      gap: 0.5rem;
+  }
+  .commentActions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--cappuccino);
+      font-size: 0.9rem;
+  }
+  .commentActions button:hover {
+      color: var(--mocha);
+  }
+
+  /* 댓글 없음 메시지 */
+  .commentMessage {
+      font-size: 1rem;
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--mocha);
+  }
+
+  /* 댓글 입력 폼 */
+  .commentForm {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      margin-top: 1rem; /* 댓글 목록과의 간격 */
+      margin-bottom: 1rem;
+      margin-bottom: 1rem;;
+      padding: 0.5rem;
+      background-color: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--milk);
+  }
+  .commentForm input {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+      padding: 0.5rem;
+      font-family: 'Gamja Flower', cursive;
+      font-size: 1.1rem;
+      background-color: transparent;
+  }
+  .commentForm button {
+      background-color: var(--latte);
+      border: none;
+      border-radius: 6px;
+      padding: 0 1rem;
+      color: var(--dark-roast);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background-color 0.2s;
+  }
+  .commentForm button:hover {
+    background-color: var(--cappuccino);
+  }
+
+  /* 댓글 수정 폼 */
+  .editingForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .editingInput {
+    border: 1px solid var(--latte);
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-family: 'Gamja Flower', cursive;
+    font-size: 1.1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .editingActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+  .editingActions button {
+    background: var(--cappuccino);
+    border: none;
+    color: var(--dark-roast);
+    border-radius: 4px;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  /* ⭐️ === 웹툰 스타일 종료 === ⭐️ */
+
+  .actionButton.exit {
+    background-color: transparent;
+    border: 2px solid var(--mocha);
+    color: var(--mocha);
+    box-shadow: 2px 2px 0px var(--mocha);
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1.2rem;
   }
   .actionButton.exit:hover {
       background-color: var(--mocha);
@@ -182,94 +284,20 @@
       transform: translate(2px, 2px);
       box-shadow: none;
   }
-  
-  /* StoryView 태그 표시 */
-  .tagDisplayArea {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-  }
-  .tagItem {
-      background-color: var(--cappuccino);
-      color: var(--dark-roast);
-      padding: 0.25rem 0.75rem;
-      border-radius: 1rem;
-      font-size: 1rem;
-  }
-  
-  
-  /* === ShareView 댓글 스타일 수정 === */
-  .commentsContent {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding-right: 10px;
-      margin-right: -10px;
-      margin-bottom: 1rem; /* 입력창과의 간격 */
-      width: 100%;
-      max-width: 300px; /* (추가) 너비 제한 */
-      margin-left: auto;
-      margin-right: auto;
-  }
-  .commentList {
-      list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;
-  }
-  .commentItem {
-      display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(0,0,0,0.02); border-radius: 4px; border-bottom: 1px solid var(--milk); font-size: 0.95rem;
-  }
-  .commentText {
-      color: var(--dark-roast); word-break: break-all; margin-right: 1rem;
-  }
-  .commentText strong { color: var(--mocha); }
-  .commentActions {
-      display: flex; gap: 0.5rem; flex-shrink: 0;
-  }
-  .commentActions button {
-      background: none; border: none; cursor: pointer; color: var(--cappuccino);
-  }
-  .commentActions button:hover { color: var(--mocha); }
-  .commentMessage {
-      font-size: 0.9rem; text-align: center; padding: 1rem 0;
-  }
-  
-  /* (수정) 댓글 입력 폼 너비 조정 */
-  .commentForm {
-      display: flex;
-      gap: 0.5rem;
-      flex-shrink: 0;
-      width: 100%;
-      max-width: 300px;
-      margin-left: auto;
-      margin-right: auto;
-  }
-  .commentForm input {
-      flex-grow: 1; border: 1px solid var(--cappuccino); border-radius: 8px; padding: 0.6rem; font-family: 'Gamja Flower', cursive; font-size: 1rem;
-  }
-  .commentForm button {
-      background-color: var(--latte); border: none; border-radius: 8px; padding: 0 1rem; color: var(--dark-roast); cursor: pointer;
-  }
-  .editingForm {
-      display: flex; width: 100%; gap: 0.5rem;
-  }
-  .editingForm input {
-      flex-grow: 1; border: 1px solid var(--latte); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.95rem;
-  }
-  .editingForm button {
-      background: var(--cappuccino); border: none; color: var(--dark-roast); border-radius: 4px; padding: 0 0.5rem; cursor: pointer; font-size: 0.85rem;
-  }
-  
+
+
   /* === 모달 스타일 (기존과 동일) === */
   .modalBackdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(36, 22, 15, 0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000;
   }
   .modalContent {
-      background-color: var(--milk-foam); padding: 2rem; border-radius: 8px; border: 2px solid var(--coffee-bean); width: 60%; max-width: 400px; text-align: center; position: relative;
+      background-color: var(--milk-foam); padding: 2rem; border-radius: 8px; border: 2px solid var(--coffee-bean); width: 90%; max-width: 400px; text-align: center; position: relative;
   }
   .modalIcon {
-      position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; background-color: var(--latte); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--dark-roast); font-size: 1.5rem; border: 3px solid var(--dark-roast);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
   }
-  .modalContent h2 { color: var(--dark-roast); margin-top: 1.5rem; margin-bottom: 0.5rem; }
+  .modalContent h2 { color: var(--dark-roast); margin-bottom: 0.5rem; }
   .modalContent > p { color: var(--espresso); margin-bottom: 1.5rem; line-height: 1.5;}
   .modalActions {
       display: flex; justify-content: center; gap: 1rem;
@@ -277,27 +305,211 @@
   .modalButton {
       padding: 0.8rem 1.5rem; border-radius: 4px; font-family: 'Gamja Flower', cursive; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
   }
-  .modalButton.submit {
-      background-color: var(--latte); border: 2px solid var(--coffee-bean); color: var(--dark-roast); box-shadow: 2px 2px 0px var(--coffee-bean);
-  }
   .modalButton.cancel {
       background-color: transparent; color: var(--mocha); border: 2px solid var(--mocha);
   }
   .deleteModalIcon {
-      color: #d32f2f; background-color: #ffcdd2;
+      color: #d32f2f;
   }
   .deleteConfirmButton {
       background-color: #d32f2f; color: white; border: 2px solid #b71c1c; box-shadow: 2px 2px 0px #b71c1c;
   }
-  .deleteConfirmButton:hover, .modalButton.submit:hover, .modalButton.cancel:hover {
+  .deleteConfirmButton:hover, .modalButton.cancel:hover {
       transform: translate(2px, 2px); box-shadow: none;
   }
-  /* StoryView 공유 모달 태그 관련 스타일 */
-  .tagInputContainer { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem; border: 2px solid var(--cappuccino); border-radius: 8px; background-color: white; margin-bottom: 1rem;}
-  .tagInputField { flex-grow: 1; border: none; outline: none; font-size: 1rem; font-family: 'Gamja Flower', cursive; }
-  .tagPill { display: flex; align-items: center; gap: 0.5rem; background-color: var(--latte); padding: 0.25rem 0.75rem; border-radius: 1rem;}
-  .tagPill button { background: none; border: none; cursor: pointer; color: var(--dark-roast); padding: 0; line-height: 1;}
-  .tagSuggestionArea { text-align: left; margin-bottom: 1.5rem;}
-  .tagSuggestionArea p { font-size: 0.9rem; color: var(--mocha); margin-bottom: 0.5rem;}
-  .tagSuggestionArea button { background-color: var(--milk); border: 1px solid var(--cappuccino); border-radius: 1rem; padding: 0.2rem 0.6rem; margin: 0.2rem; cursor: pointer; font-family: 'Gamja Flower', cursive; font-size: 0.9rem; transition: background-color 0.2s;}
-  .tagSuggestionArea button:hover { background-color: var(--cappuccino);}
+  .commentsContent {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 5px 10px 5px 5px; /* 스크롤바 영역 확보 */
+}
+
+/* 웹킷 기반 브라우저를 위한 스크롤바 스타일 */
+.commentsContent::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 */
+}
+
+.commentsContent::-webkit-scrollbar-thumb {
+    background-color: var(--cappuccino); /* 스크롤 핸들 색상 */
+    border-radius: 4px;
+}
+
+.commentsContent::-webkit-scrollbar-track {
+    background-color: var(--milk); /* 스크롤 트랙 색상 */
+}
+/* 마지막 페이지 버튼 그룹 */
+.buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* 버튼 사이 간격 */
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+  
+  /* --- 액션 버튼 스타일 --- */
+  .actionButton {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+  }
+  
+  .actionButton:hover {
+    transform: translate(2px, 2px);
+    box-shadow: none !important; /* 호버 시 그림자 제거 */
+  }
+  
+  /* 공유하기 버튼 */
+  .actionButton.share {
+    background-color: var(--mocha);
+    border: 2px solid var(--dark-roast);
+    color: white;
+    box-shadow: 2px 2px 0px var(--dark-roast);
+  }
+  .actionButton.share:hover {
+    background-color: var(--dark-roast);
+  }
+  
+  /* 태그 수정 버튼 */
+  .actionButton.edit {
+    background-color: var(--latte);
+    border: 2px solid var(--cappuccino);
+    color: var(--dark-roast);
+    box-shadow: 2px 2px 0px var(--cappuccino);
+  }
+  .actionButton.edit:hover {
+    background-color: var(--cappuccino);
+  }
+  
+  /* 공유 취소 버튼 */
+  .actionButton.unpublish {
+    background-color: #757575;
+    border: 2px solid #424242;
+    color: white;
+    box-shadow: 2px 2px 0px #424242;
+  }
+  .actionButton.unpublish:hover {
+    background-color: #424242;
+  }
+  
+  /* 책 덮기 버튼 (기존 스타일 약간 수정) */
+  .actionButton.exit {
+    margin-top: 1rem;
+  }
+  
+  /* --- 모달 버튼 스타일 --- */
+  .modalButton.submit {
+    background-color: var(--mocha);
+    border: 2px solid var(--dark-roast);
+    color: white;
+    box-shadow: 2px 2px 0px var(--dark-roast);
+  }
+  .modalButton.submit:hover {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+    background-color: var(--dark-roast);
+  }
+  
+  /* --- 마지막 페이지 기타 스타일 --- */
+  .finalChoicePage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+  }
+  
+  .finalSubtitle {
+      color: var(--mocha);
+      font-size: 1.2rem;
+  }
+  
+  .tagDisplayArea {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 1rem 0;
+      max-width: 100%;
+  }
+  
+  .tagItem {
+      background-color: var(--latte);
+      color: var(--dark-roast);
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 1rem;
+  }
+  
+  /* --- 모달 태그 관련 스타일 --- */
+  .tagInputContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid var(--cappuccino);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+  }
+  
+  .tagPill {
+      display: flex;
+      align-items: center;
+      background-color: var(--latte);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      gap: 0.4rem;
+  }
+  
+  .tagPill button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: var(--mocha);
+  }
+  
+  .tagInputField {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+      font-family: 'Gamja Flower', cursive;
+      font-size: 1.1rem;
+      min-width: 150px;
+      background-color: transparent;
+  }
+  
+  .tagSuggestionArea {
+      margin-bottom: 1.5rem;
+  }
+  .tagSuggestionArea p {
+      font-size: 0.9rem;
+      color: var(--mocha);
+      margin-bottom: 0.5rem;
+      text-align: left;
+  }
+  .suggestionPill {
+      background-color: transparent;
+      border: 1px solid var(--cappuccino);
+      color: var(--cappuccino);
+      border-radius: 1rem;
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+      margin: 0.2rem;
+      font-family: 'Gamja Flower', cursive;
+      font-size: 1rem;
+      transition: all 0.2s;
+  }
+  .suggestionPill:hover {
+      background-color: var(--cappuccino);
+      color: white;
+  }

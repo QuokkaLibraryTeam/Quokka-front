@@ -57,6 +57,7 @@ const View = ({ draft, onReview }) => {
     };
     
     const handleExit = () => {
+        onReview('accept')
         navigate('/'); // 메인 페이지로 이동
     };
 

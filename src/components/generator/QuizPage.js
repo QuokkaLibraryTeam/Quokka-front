@@ -43,7 +43,7 @@ const QuizPage = () => {
      * @param {number} storyId - 선택된 동화의 ID
      */
     const handleStorySelect = (storyId) => {
-        navigate(`/quiz/${storyId}`);
+        navigate(`/view/quiz/${storyId}`);
     };
 
     const renderContent = () => {
